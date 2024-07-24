@@ -8,6 +8,8 @@ Johan Sebastián Duarte
 
 Joseph Samuel Ospina
 
+![](C:\Users\Josep\Documents\GitHub\Proyecto-Bases-de-Datos\table.png)
+
 
 
 ## Casos de Uso para la Base de Datos
@@ -163,7 +165,7 @@ Joseph Samuel Ospina
    
 
 3. El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono, correo
-  electrónico, ciudad).
+    electrónico, ciudad).
 
   ```sql
   
@@ -188,7 +190,7 @@ Joseph Samuel Ospina
    
 
 6. El administrador ingresa los detalles del repuesto (nombre, descripción, precio, stock,
-  proveedor).
+    proveedor).
 
   ```sql
   
@@ -327,7 +329,7 @@ Joseph Samuel Ospina
    
 
 6. El sistema muestra los detalles de la venta seleccionada (bicicletas compradas, cantidad,
-  precio).
+    precio).
 
   ```sql
   
@@ -435,7 +437,7 @@ Joseph Samuel Ospina
    
 
 2. El administrador selecciona la opción para consultar los clientes con mayor gasto en un año
-  específico.
+    específico.
 
   ```sql
   
@@ -471,7 +473,7 @@ Joseph Samuel Ospina
    
 
 2. El administrador selecciona la opción para consultar los proveedores con más compras en el
-  último mes.
+    último mes.
 
   ```sql
   
@@ -480,7 +482,7 @@ Joseph Samuel Ospina
   
 
 3. El sistema muestra una lista de proveedores ordenados por el número de compras recibidas
-  en el último mes.
+    en el último mes.
 
   ```sql
   
@@ -507,7 +509,7 @@ Joseph Samuel Ospina
    
 
 3. El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de menor a
-  mayor.
+    mayor.
 
   ```sql
   
@@ -610,7 +612,7 @@ Joseph Samuel Ospina
    
 
 2. El administrador selecciona la opción para consultar las compras de repuestos por
-  proveedor.
+    proveedor.
 
   ```sql
   
@@ -619,7 +621,7 @@ Joseph Samuel Ospina
   
 
 3. El sistema muestra una lista de proveedores con el total de repuestos comprados a cada
-  uno.
+    uno.
 
   ```sql
   
@@ -654,7 +656,7 @@ Joseph Samuel Ospina
    
 
 4. El sistema muestra una lista de clientes que han realizado compras dentro del rango de
-  fechas especificado.
+    fechas especificado.
 
   ```sql
   
@@ -687,7 +689,7 @@ Joseph Samuel Ospina
    
 
 3. El sistema llama a un procedimiento almacenado para actualizar el inventario de las
-  bicicletas vendidas.
+    bicicletas vendidas.
 
   ```sql
   
@@ -764,7 +766,7 @@ Joseph Samuel Ospina
    
 
 4. El procedimiento almacenado obtiene las ventas y los detalles de las ventas realizadas por el
-  cliente.
+    cliente.
 
   ```sql
   
@@ -799,7 +801,7 @@ Joseph Samuel Ospina
    
 
 4. El procedimiento almacenado inserta la compra y sus detalles en las tablas correspondientes
-  y actualiza el stock de repuestos.
+    y actualiza el stock de repuestos.
 
   ```sql
   
@@ -876,7 +878,7 @@ Joseph Samuel Ospina
    
 
 5. El procedimiento almacenado actualiza los precios de todas las bicicletas de la marca
-  especificada.
+    especificada.
 
   ```sql
   
@@ -945,7 +947,7 @@ Joseph Samuel Ospina
    
 
 4. El procedimiento almacenado devuelve un mensaje indicando si hay suficiente stock para
-  realizar la venta.
+    realizar la venta.
 
   ```sql
   
@@ -1014,7 +1016,7 @@ Joseph Samuel Ospina
    
 
 4. El procedimiento almacenado obtiene las compras y los detalles de las compras realizadas al
-  proveedor.
+    proveedor.
 
   ```sql
   
@@ -1157,7 +1159,7 @@ Joseph Samuel Ospina
    
 
 2. El administrador selecciona la opción para contar el número de ventas en un rango de
-  fechas.
+    fechas.
 
   ```sql
   
@@ -1182,7 +1184,7 @@ Joseph Samuel Ospina
    
 
 5. El procedimiento almacenado devuelve el número de ventas en el rango de fechas
-  especificado.
+    especificado.
 
   ```sql
   
@@ -1201,7 +1203,7 @@ Joseph Samuel Ospina
    
 
 2. El administrador selecciona la opción para calcular el total de repuestos comprados por
-  proveedor.
+    proveedor.
 
   ```sql
   
@@ -1226,7 +1228,7 @@ Joseph Samuel Ospina
    
 
 5. El procedimiento almacenado devuelve el total de repuestos comprados al proveedor
-  especificado.
+    especificado.
 
   ```sql
   
@@ -1311,7 +1313,7 @@ Joseph Samuel Ospina
    
 
 5. El procedimiento almacenado devuelve el número de clientes que han realizado compras en
-  el mes especificado.
+    el mes especificado.
 
   ```sql
   
@@ -1456,7 +1458,7 @@ Joseph Samuel Ospina
    
 
 4. El procedimiento almacenado devuelve el número de repuestos suministrados por cada
-  proveedor.
+    proveedor.
 
   ```sql
   
@@ -1517,7 +1519,7 @@ Joseph Samuel Ospina
    
 
 3. El sistema llama a un procedimiento almacenado para calcular el promedio de compras
-  mensuales.
+    mensuales.
 
   ```sql
   
@@ -1578,7 +1580,7 @@ Joseph Samuel Ospina
    
 
 2. El administrador selecciona la opción para contar el número de ventas por categoría de
-  bicicleta.
+    bicicleta.
 
   ```sql
   
