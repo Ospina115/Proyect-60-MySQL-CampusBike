@@ -5,6 +5,13 @@ INSERT INTO paises (nombre) VALUES
 ('España'),
 ('Colombia');
 
+INSERT INTO marca (nombre) VALUES
+('Giant'),
+('Scott'),
+('Specialized'),
+('Trek'),
+('Mongoose');
+
 INSERT INTO ciudades (nombre, pais_id) VALUES
 ('Nueva York', 1),
 ('Ciudad de México', 2),
@@ -16,12 +23,19 @@ INSERT INTO ciudades (nombre, pais_id) VALUES
 ('Barranquilla', 5),
 ('Cartagena', 5);
 
+INSERT INTO modelo (nombre, descripcion, id_marca) VALUES
+('Mountain 1000', 'Bicicleta de montaña de alta gama', 1),
+('Speedster 200', 'Bicicleta de carretera ligera', 2),
+('Road Elite', 'Bicicleta de carretera profesional', 3),
+('Hybrid 300', 'Bicicleta híbrida para ciudad', 4),
+('BMX Pro', 'Bicicleta BMX para acrobacias', 5);
+
 INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
-('Mountain 1000', 'Giant', 5000000.50, 10),
-('Speedster 200', 'Scott', 3500000.75, 5),
-('Road Elite', 'Specialized', 4000000.00, 7),
-('Hybrid 300', 'Trek', 2800000.25, 12),
-('BMX Pro', 'Mongoose', 1900000.50, 8);
+(1, 1, 5000000.50, 10),
+(2, 2, 3500000.75, 5),
+(3, 3, 4000000.00, 7),
+(4, 4, 2800000.25, 12),
+(5, 5, 1900000.50, 8);
 
 INSERT INTO clientes (nombre, email, telefono, password, ciudad_id) VALUES
 ('Juan Pérez', 'juan.perez@gmail.com', 1234567890, 'password123', 6),
@@ -51,12 +65,12 @@ INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) VALUES
 ('Trek', 4567890123, 'tre@trekbikes.com', 6543210987, 4),
 ('Mongoose', 5678901234, 'mongo@mongoose.com', 5432109876, 5);
 
-INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id) VALUES
-('Cadena', 'Cadena para bicicleta de montaña', 210000.75, 20, 1),
-('Llanta', 'Llanta para bicicleta de carretera', 420000.50, 15, 2),
-('Asiento', 'Asiento cómodo para bicicleta', 147000.25, 30, 3),
-('Pedal', 'Pedal antideslizante', 84000.10, 50, 4),
-('Manubrio', 'Manubrio ergonómico', 189000.00, 25, 5);
+INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca) VALUES
+('Cadena', 'Cadena para bicicleta de montaña', 210000.75, 20, 1, 1, 1),
+('Llanta', 'Llanta para bicicleta de carretera', 420000.50, 15, 2, 2, 2),
+('Asiento', 'Asiento cómodo para bicicleta', 147000.25, 30, 3, 3, 3),
+('Pedal', 'Pedal antideslizante', 84000.10, 50, 4, 4, 4),
+('Manubrio', 'Manubrio ergonómico', 189000.00, 25, 5, 5, 5);
 
 INSERT INTO compras (fecha, proveedor_id, total) VALUES
 ('2023-01-10', 1, 2100000.00),
