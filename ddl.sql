@@ -2,9 +2,7 @@ DROP DATABASE campusbike;
 
 CREATE DATABASE IF NOT EXISTS campusbike;
 
-
 USE campusbike;
-
 
 CREATE TABLE paises (
     id INT PRIMARY KEY AUTO_INCREMENT,
@@ -15,6 +13,7 @@ CREATE TABLE marca(
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100)
 );
+
 CREATE TABLE ciudades (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -22,23 +21,22 @@ CREATE TABLE ciudades (
     FOREIGN KEY (pais_id) REFERENCES paises(id)
 );
 
+CREATE TABLE modelo(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    descripcion VARCHAR(200),
+    id_marca INT,
+    FOREIGN KEY (id_marca) REFERENCES marca(id)
+);
+
 CREATE TABLE bicicletas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     modelo INT,
     marca INT,
     precio DECIMAL(10,2),
-    stock INT
-    FOREIGN KEY (modelo) REFERENCES modelo(id)
+    stock INT,
+    FOREIGN KEY (modelo) REFERENCES modelo(id),
     FOREIGN KEY (marca) REFERENCES marca(id)
-);
-
-
-CREATE TABLE modelo(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nombre VARCHAR(100),
-    descripcion VARCHAR(200),
-    id_marca INT
-    FOREIGN KEY (id_marca)REFERENCES marca(id)
 );
 
 CREATE TABLE clientes (
@@ -109,4 +107,3 @@ CREATE TABLE detalles_de_compras (
     FOREIGN KEY (compra_id) REFERENCES compras(id),
     FOREIGN KEY (repuesto_id) REFERENCES repuestos(id)
 );
-
