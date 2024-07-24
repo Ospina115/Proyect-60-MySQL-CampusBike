@@ -11,6 +11,10 @@ CREATE TABLE paises (
     nombre VARCHAR(100) NOT NULL
 );
 
+CREATE TABLE marca(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100)
+);
 CREATE TABLE ciudades (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
@@ -20,10 +24,21 @@ CREATE TABLE ciudades (
 
 CREATE TABLE bicicletas (
     id INT PRIMARY KEY AUTO_INCREMENT,
-    modelo VARCHAR(100),
-    marca VARCHAR(100),
+    modelo INT,
+    marca INT,
     precio DECIMAL(10,2),
     stock INT
+    FOREIGN KEY (modelo) REFERENCES modelo(id)
+    FOREIGN KEY (marca) REFERENCES marca(id)
+);
+
+
+CREATE TABLE modelo(
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nombre VARCHAR(100),
+    descripcion VARCHAR(200),
+    id_marca INT
+    FOREIGN KEY (id_marca)REFERENCES marca(id)
 );
 
 CREATE TABLE clientes (
@@ -70,7 +85,11 @@ CREATE TABLE repuestos (
     precio DECIMAL(10,2),
     stock INT,
     proveedor_id INT,
-    FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
+    modelo INT,
+    marca INT,
+    FOREIGN KEY (proveedor_id) REFERENCES proveedores(id),
+    FOREIGN KEY (modelo) REFERENCES modelo(id),
+    FOREIGN KEY (marca) REFERENCES marca(id)
 );
 
 CREATE TABLE compras (
