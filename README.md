@@ -32,7 +32,7 @@ INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
 El administrador actualiza la información (precio, stock).
 
 ```sql
-UPDATE bicicletas
+UPDATE bicicletas 
 SET precio = 8000000.00, stock = 15
 WHERE id = 7;
 ```
@@ -48,53 +48,38 @@ WHERE id = 7;
 
 ### Caso de Uso 2: Registro de Ventas
 
-1. El vendedor selecciona la opción para registrar una nueva venta.
 
-   ```sql
-   
-   ```
 
-   
+El vendedor selecciona las bicicletas que el cliente desea comprar y especifica la cantidad.
 
-2. El vendedor selecciona el cliente que realiza la compra.
+```sql
+INSERT INTO ventas (fecha, cliente_id)values
+('2005-08-31', 1);
+INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario) VALUES
+(5, 5, 3, 4000000.50);
+```
 
-   ```sql
-   
-   ```
 
-   
 
-3. El vendedor selecciona las bicicletas que el cliente desea comprar y especifica la cantidad.
+El sistema calcula el total de la venta.
 
-   ```sql
-   
-   ```
+```sql
+SELECT v.id AS id_venta,
+SUM(dv.cantidad * dv.precio_unitario) AS total_venta
+FROM ventas v
+INNER JOIN detalles_de_ventas dv ON v.id = dv.venta_id
+GROUP BY v.id;
+```
 
-   
 
-4. El sistema calcula el total de la venta.
 
-   ```sql
-   
-   ```
+El sistema guarda la venta y actualiza el inventario de bicicletas.
 
-   
+```sql
 
-5. El vendedor confirma la venta.
+```
 
-   ```sql
-   
-   ```
 
-   
-
-6. El sistema guarda la venta y actualiza el inventario de bicicletas.
-
-   ```sql
-   
-   ```
-
-   
 
 ### Caso de Uso 3: Gestión de Proveedores y Repuestos
 
