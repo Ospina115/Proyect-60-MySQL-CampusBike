@@ -11,14 +11,14 @@ CREATE TABLE paises (
     nombre VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE ciudades(
+CREATE TABLE ciudades (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     pais_id INT,
     FOREIGN KEY (pais_id) REFERENCES paises(id)
 );
 
-CREATE TABLE bicicletas(
+CREATE TABLE bicicletas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     modelo VARCHAR(100),
     marca VARCHAR(100),
@@ -26,24 +26,24 @@ CREATE TABLE bicicletas(
     stock INT
 );
 
-CREATE TABLE clientes(
+CREATE TABLE clientes (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100),
     email VARCHAR(100),
-    telefono INT,
+    telefono BIGINT,
     password VARCHAR(100),
     ciudad_id INT,
     FOREIGN KEY (ciudad_id) REFERENCES ciudades(id)
 );
 
-CREATE TABLE ventas(
+CREATE TABLE ventas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE,
     cliente_id INT,
-    FOREIGN KEY (cliente)
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id)
 );
 
-CREATE TABLE detalles_de_ventas(
+CREATE TABLE detalles_de_ventas (
     id INT PRIMARY KEY AUTO_INCREMENT,
     venta_id INT,
     bicicleta_id INT,
@@ -53,17 +53,17 @@ CREATE TABLE detalles_de_ventas(
     FOREIGN KEY (bicicleta_id) REFERENCES bicicletas(id)
 );
 
-CREATE TABLE proveedores(
+CREATE TABLE proveedores (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100),
-    contacto INT,
+    contacto BIGINT,
     email VARCHAR(100),
-    telefono INT
+    telefono BIGINT,
     ciudad_id INT,
     FOREIGN KEY (ciudad_id) REFERENCES ciudades(id)
 );
 
-CREATE TABLE repuestos(
+CREATE TABLE repuestos (
     id INT PRIMARY KEY AUTO_INCREMENT,
     nombre VARCHAR(100),
     descripcion VARCHAR(200),
@@ -73,15 +73,15 @@ CREATE TABLE repuestos(
     FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
 );
 
-CREATE TABLE compras(
+CREATE TABLE compras (
     id INT PRIMARY KEY AUTO_INCREMENT,
     fecha DATE,
     proveedor_id INT,
+    total DECIMAL(10,2),
     FOREIGN KEY (proveedor_id) REFERENCES proveedores(id)
-    total DECIMAL
 );
 
-CREATE TABLE detalles_de_compras(
+CREATE TABLE detalles_de_compras (
     id INT PRIMARY KEY AUTO_INCREMENT,
     compra_id INT,
     repuesto_id INT,
@@ -90,3 +90,4 @@ CREATE TABLE detalles_de_compras(
     FOREIGN KEY (compra_id) REFERENCES compras(id),
     FOREIGN KEY (repuesto_id) REFERENCES repuestos(id)
 );
+
