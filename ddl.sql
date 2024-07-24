@@ -41,7 +41,7 @@ CREATE TABLE ventas(
     fecha DATE,
     cliente_id INT,
     FOREIGN KEY (cliente)
-)
+);
 
 CREATE TABLE detalles_de_ventas(
     id INT PRIMARY KEY AUTO_INCREMENT,
