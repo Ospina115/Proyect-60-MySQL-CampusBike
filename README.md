@@ -8,7 +8,7 @@ Johan Sebastián Duarte
 
 Joseph Samuel Ospina
 
-![](C:\Users\Josep\Documents\GitHub\Proyecto-Bases-de-Datos\table.png)
+![](table.png)
 
 
 
