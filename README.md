@@ -32,7 +32,7 @@ INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
 El administrador actualiza la información (precio, stock).
 
 ```sql
-UPDATE bicicletas 
+UPDATE bicicletas
 SET precio = 8000000.00, stock = 15
 WHERE id = 7;
 ```
