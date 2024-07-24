@@ -18,79 +18,37 @@ Joseph Samuel Ospina
 
 ### Caso de uso 1: Gestión de Inventario de Bicicletas
 
-1. El administrador de inventario ingresa al sistema.
 
-   ```sql
-   
-   ```
 
-2. El administrador selecciona la opción para agregar una nueva bicicleta.
+El administrador ingresa los detalles de la bicicleta (modelo, marca, precio, stock).
 
-   ```sql
-   
-   ```
+```sql
+INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
+(3, 2, 6000000.50, 5);
+```
 
-   
 
-3. El administrador ingresa los detalles de la bicicleta (modelo, marca, precio, stock).
 
-   ```sql
-   
-   ```
+El administrador actualiza la información (precio, stock).
 
-   
+```sql
+UPDATE bicicletas 
+SET precio = 8000000.00, stock = 15
+WHERE id = 7;
+```
 
-4. El sistema valida y guarda la información de la nueva bicicleta.
+El administrador selecciona una bicicleta para eliminar.
 
-   ```sql
-   
-   ```
-
-   
-
-5. El administrador selecciona una bicicleta existente para actualizar.
-
-   ```sql
-   
-   ```
-
-   
-
-6. El administrador actualiza la información (precio, stock).
-
-   ```sql
-   
-   ```
-
-   
-
-7. El sistema valida y guarda los cambios.
-
-   ```sql
-   
-   ```
-
-   
-
-8. El administrador selecciona una bicicleta para eliminar.
-
-   ```sql
-   
-   ```
-
-   
-
-9. El sistema elimina la bicicleta seleccionada del inventario.
-
-   ```sql
-   
-   ```
+```sql
+DELETE FROM bicicletas
+WHERE id = 7;
+```
 
 
 
 ### Caso de Uso 2: Registro de Ventas
 
-1. El vendedor ingresa al sistema.
+1. El vendedor selecciona la opción para registrar una nueva venta.
 
    ```sql
    
@@ -98,7 +56,7 @@ Joseph Samuel Ospina
 
    
 
-2. El vendedor selecciona la opción para registrar una nueva venta.
+2. El vendedor selecciona el cliente que realiza la compra.
 
    ```sql
    
@@ -106,7 +64,7 @@ Joseph Samuel Ospina
 
    
 
-3. El vendedor selecciona el cliente que realiza la compra.
+3. El vendedor selecciona las bicicletas que el cliente desea comprar y especifica la cantidad.
 
    ```sql
    
@@ -114,7 +72,7 @@ Joseph Samuel Ospina
 
    
 
-4. El vendedor selecciona las bicicletas que el cliente desea comprar y especifica la cantidad.
+4. El sistema calcula el total de la venta.
 
    ```sql
    
@@ -122,7 +80,7 @@ Joseph Samuel Ospina
 
    
 
-5. El sistema calcula el total de la venta.
+5. El vendedor confirma la venta.
 
    ```sql
    
@@ -130,15 +88,7 @@ Joseph Samuel Ospina
 
    
 
-6. El vendedor confirma la venta.
-
-   ```sql
-   
-   ```
-
-   
-
-7. El sistema guarda la venta y actualiza el inventario de bicicletas.
+6. El sistema guarda la venta y actualiza el inventario de bicicletas.
 
    ```sql
    
