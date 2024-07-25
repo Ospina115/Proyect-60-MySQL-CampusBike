@@ -8,7 +8,7 @@ Johan Sebastián Duarte
 
 Joseph Samuel Ospina
 
-![](table.png)
+![](diagrama.webp)
 
 
 
@@ -24,7 +24,7 @@ El administrador ingresa los detalles de la bicicleta (modelo, marca, precio, st
 
 ```sql
 INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
-(3, 2, 6000000.50, 5);
+(3, 2, 6000000.50, 5);  //aqui va es un trigger
 ```
 
 
@@ -34,14 +34,14 @@ El administrador actualiza la información (precio, stock).
 ```sql
 UPDATE bicicletas 
 SET precio = 8000000.00, stock = 15
-WHERE id = 7;
+WHERE id = 7;  //aqui va es un trigger
 ```
 
 El administrador selecciona una bicicleta para eliminar.
 
 ```sql
 DELETE FROM bicicletas
-WHERE id = 7;
+WHERE id = 7;  //aqui va es un trigger
 ```
 
 
@@ -56,7 +56,7 @@ El vendedor selecciona las bicicletas que el cliente desea comprar y especifica 
 INSERT INTO ventas (fecha, cliente_id)values
 ('2005-08-31', 1);
 INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario) VALUES
-(5, 5, 3, 4000000.50);
+(5, 5, 3, 4000000.50);	 //aqui va es un trigger
 ```
 
 
@@ -109,7 +109,7 @@ COMMIT;
 
   ```sql
   INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
-  VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7);
+  VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7); //aqui va es un trigger
   ```
 
 
@@ -119,7 +119,7 @@ COMMIT;
 
   ```sql
   INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
-  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 );
+  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 ); //aqui va es un trigger
   ```
 
 
@@ -129,7 +129,7 @@ COMMIT;
    ```sql
    UPDATE proveedores 
    SET nombre = 'la liendra'
-   WHERE id = 6;
+   WHERE id = 6; //aqui va es un trigger
    ```
 
    
@@ -139,7 +139,7 @@ COMMIT;
    ```sql
    UPDATE repuestos 
    SET nombre = 'reykon', descripcion = 'pelea epica por luisa castro'
-   WHERE id = 6;
+   WHERE id = 6;  //aqui va es un trigger
    ```
 
    
@@ -148,7 +148,7 @@ COMMIT;
 
    ```sql
    DELETE FROM proveedores 
-   WHERE id = 6;
+   WHERE id = 6;	 //aqui va es un trigger
    ```
 
    
@@ -157,103 +157,101 @@ COMMIT;
 
     ```sql
     DELETE FROM repuestos 
-    WHERE id = 6;
+    WHERE id = 6;  //aqui va es un trigger
     ```
 
     
 
 ### Caso de Uso 4: Consulta de Historial de Ventas por Cliente
 
-1. El usuario ingresa al sistema.
+1. El usuario selecciona la opción para consultar el historial de ventas.
 
    ```sql
-   
+   SELECT id, fecha, cliente_id 
+   FROM ventas;
    ```
 
    
 
-2. El usuario selecciona la opción para consultar el historial de ventas.
+2. El usuario selecciona el cliente del cual desea ver el historial.
 
    ```sql
-   
+   SELECT id, fecha, cliente_id 
+   FROM ventas
+   WHERE id = 1;
    ```
 
    
 
-3. El usuario selecciona el cliente del cual desea ver el historial.
+3. El sistema muestra todas las ventas realizadas por el cliente seleccionado.
 
    ```sql
-   
+   +----+------------+------------+
+   | id | fecha      | cliente_id |
+   +----+------------+------------+
+   |  1 | 2023-01-15 |          1 |
+   +----+------------+------------+
    ```
 
    
 
-4. El sistema muestra todas las ventas realizadas por el cliente seleccionado.
+4. El usuario selecciona una venta específica para ver los detalles.
 
    ```sql
-   
+   SELECT v.id AS "Id de la venta", v.fecha AS "Fecha de la compra", d.venta_id, d.cantidad, d.precio_unitario
+   FROM ventas AS v
+   JOIN detalles_de_ventas AS d ON v.id = d.venta_id
+   WHERE v.id = 1;
    ```
 
    
 
-5. El usuario selecciona una venta específica para ver los detalles.
-
-   ```sql
-   
-   ```
-
-   
-
-6. El sistema muestra los detalles de la venta seleccionada (bicicletas compradas, cantidad,
+5. El sistema muestra los detalles de la venta seleccionada (bicicletas compradas, cantidad,
     precio).
 
   ```sql
-  
+  SELECT Bicicleta_id, venta_id AS "Id de la compra", cantidad, precio_unitario
+  FROM detalles_de_ventas;
   ```
 
   
 
 ### Caso de Uso 5: Gestión de Compras de Repuestos
 
-1. El administrador de compras ingresa al sistema.
+1. El administrador selecciona la opción para registrar una nueva compra.
+
+   ```sql
+   INSERT INTO compras (fecha, proveedor_id, total)
+   VALUES ('2024-07-25', 1, 10000); //aqui va es un trigger
+   ```
+
+   
+
+2. El administrador selecciona el proveedor al que se realizó la compra.
+
+   ```sql
+   SELECT id ,fecha, proveedor_id, total
+   FROM compras
+   WHERE id = 6;
+   ```
+
+   
+
+3. El administrador ingresa los detalles de la compra (fecha, total).
+
+   ```sql
+   INSERT INTO () //aqui va es un trigger
+   ```
+
+   
+
+4. El sistema guarda la compra y genera un identificador único.
 
    ```sql
    
    ```
 
-   
-
-2. El administrador selecciona la opción para registrar una nueva compra.
-
-   ```sql
-   
-   ```
-
-   
-
-3. El administrador selecciona el proveedor al que se realizó la compra.
-
-   ```sql
-   
-   ```
-
-   
-
-4. El administrador ingresa los detalles de la compra (fecha, total).
-
-   ```sql
-   
-   ```
-
-   
-
-5. El sistema guarda la compra y genera un identificador único.
-
-   ```sql
-   
-   ```
-
-6. El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
+5. El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
    unitario.
 
    ```sql
@@ -262,7 +260,7 @@ COMMIT;
 
    
 
-7. El sistema guarda los detalles de la compra y actualiza el stock de los repuestos comprados.
+6. El sistema guarda los detalles de la compra y actualiza el stock de los repuestos comprados.
 
    ```sql
    
@@ -278,7 +276,7 @@ COMMIT;
 
 ### Caso de Uso 6: Consulta de Bicicletas Más Vendidas por Marca
 
-1. El usuario ingresa al sistema.
+1. El usuario selecciona la opción para consultar las bicicletas más vendidas por marca.
 
    ```sql
    
@@ -286,15 +284,7 @@ COMMIT;
 
    
 
-2. El usuario selecciona la opción para consultar las bicicletas más vendidas por marca.
-
-   ```sql
-   
-   ```
-
-   
-
-3. El sistema muestra una lista de marcas y el modelo de bicicleta más vendido para cada marca.
+2. El sistema muestra una lista de marcas y el modelo de bicicleta más vendido para cada marca.
 
    ```sql
    
@@ -304,15 +294,7 @@ COMMIT;
 
 ### Caso de Uso 7: Clientes con Mayor Gasto en un Año Específico
 
-1. El administrador ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para consultar los clientes con mayor gasto en un año
+1. El administrador selecciona la opción para consultar los clientes con mayor gasto en un año
     específico.
 
   ```sql
@@ -340,15 +322,7 @@ COMMIT;
 
 ### Caso de Uso 8: Proveedores con Más Compras en el Último Mes
 
-1. El administrador de compras ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para consultar los proveedores con más compras en el
+1. El administrador selecciona la opción para consultar los proveedores con más compras en el
     último mes.
 
   ```sql
@@ -368,7 +342,7 @@ COMMIT;
 
 ### Caso de Uso 9: Repuestos con Menor Rotación en el Inventario
 
-1. El administrador de inventario ingresa al sistema.
+1. El administrador selecciona la opción para consultar los repuestos con menor rotación.
 
    ```sql
    
@@ -376,15 +350,7 @@ COMMIT;
 
    
 
-2. El administrador selecciona la opción para consultar los repuestos con menor rotación.
-
-   ```sql
-   
-   ```
-
-   
-
-3. El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de menor a
+2. El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de menor a
     mayor.
 
   ```sql
@@ -395,7 +361,7 @@ COMMIT;
 
 ### Caso de Uso 10: Ciudades con Más Ventas Realizadas
 
-1. El administrador ingresa al sistema.
+1. El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
 
    ```sql
    
@@ -403,15 +369,7 @@ COMMIT;
 
    
 
-2. El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
-
-   ```sql
-   
-   ```
-
-   
-
-3. El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
+2. El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
 
    ```sql
    
@@ -427,71 +385,80 @@ COMMIT;
 
 ### Caso de Uso 11: Consulta de Ventas por Ciudad
 
-1. El administrador ingresa al sistema.
+1. El administrador selecciona la opción para consultar las ventas por ciudad.
 
    ```sql
-   
+   SELECT v.fecha, c.nombre AS 'nombre del cliente', c.email, c.telefono, c.password, ci.nombre AS 'nombre de la ciudad'
+   FROM ventas AS v
+   JOIN clientes AS c ON v.cliente_id = c.id
+   JOIN ciudades AS ci ON c.ciudad_id = ci.id;
    ```
 
    
 
-2. El administrador selecciona la opción para consultar las ventas por ciudad.
+2. El sistema muestra una lista de ciudades con el total de ventas realizadas en cada una.
 
    ```sql
-   
+   SELECT ci.nombre, de.cantidad
+   FROM ciudades AS ci
+   JOIN clientes AS c ON ci.id = c.ciudad_id
+   JOIN ventas AS v ON c.id = v.cliente_id
+   JOIN detalles_de_ventas AS de ON v.id = de.venta_id;
    ```
 
-   
-
-3. El sistema muestra una lista de ciudades con el total de ventas realizadas en cada una.
-
    ```sql
-   
+   +--------------+----------+
+   | nombre       | cantidad |
+   +--------------+----------+
+   | Bogotá       |        1 |
+   | Medellín     |        2 |
+   | Cali         |        3 |
+   | Barranquilla |        1 |
+   | Cartagena    |        2 |
+   +--------------+----------+
    ```
 
    
 
 ### Caso de Uso 12: Consulta de Proveedores por País
 
-1. El administrador de compras ingresa al sistema.
+1. El administrador selecciona la opción para consultar los proveedores por país.
 
    ```sql
-   
+   SELECT p.nombre AS 'nombre de los paises', pr.nombre AS 'nombre proveedor'
+   FROM proveedores AS pr
+   JOIN ciudades AS c ON pr.ciudad_id = c.id
+   JOIN paises AS p ON c.pais_id = p.id;
    ```
 
    
 
-2. El administrador selecciona la opción para consultar los proveedores por país.
+2. El sistema muestra una lista de países con los proveedores en cada país.
 
    ```sql
-   
-   ```
-
-   
-
-3. El sistema muestra una lista de países con los proveedores en cada país.
-
-   ```sql
-   
+   +----------------------+------------------+
+   | nombre de los paises | nombre proveedor |
+   +----------------------+------------------+
+   | Estados Unidos       | Giant            |
+   | México               | Scott            |
+   | Canadá               | Specialized      |
+   | España               | Trek             |
+   | Colombia             | Mongoose         |
+   +----------------------+------------------+
    ```
 
    
 
 ### Caso de Uso 13: Compras de Repuestos por Proveedor
 
-1. El administrador de compras ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para consultar las compras de repuestos por
+1. El administrador selecciona la opción para consultar las compras de repuestos por
     proveedor.
 
   ```sql
-  
+  SELECT p.nombre AS "nombre del proveedor", d.cantidad AS "cantidad de compras al proveedor"
+  FROM proveedores AS p
+  JOIN compras AS c ON p.id = c.proveedor_id
+  JOIN detalles_de_compras AS d ON c.id = d.compra_id;
   ```
 
   
@@ -500,14 +467,22 @@ COMMIT;
     uno.
 
   ```sql
-  
+  +----------------------+----------------------------------+
+  | nombre del proveedor | cantidad de compras al proveedor |
+  +----------------------+----------------------------------+
+  | Giant                |                               10 |
+  | Scott                |                               10 |
+  | Specialized          |                               20 |
+  | Trek                 |                               20 |
+  | Mongoose             |                               25 |
+  +----------------------+----------------------------------+
   ```
 
   
 
 ### Caso de Uso 14: Clientes con Ventas en un Rango de Fechas
 
-1. El usuario ingresa al sistema.
+1. El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
 
    ```sql
    
@@ -515,7 +490,7 @@ COMMIT;
 
    
 
-2. El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
+2. El usuario ingresa las fechas de inicio y fin del rango.
 
    ```sql
    
@@ -523,15 +498,7 @@ COMMIT;
 
    
 
-3. El usuario ingresa las fechas de inicio y fin del rango.
-
-   ```sql
-   
-   ```
-
-   
-
-4. El sistema muestra una lista de clientes que han realizado compras dentro del rango de
+3. El sistema muestra una lista de clientes que han realizado compras dentro del rango de
     fechas especificado.
 
   ```sql
