@@ -104,8 +104,8 @@ COMMIT;
 
 ### Caso de Uso 3: Gestión de Proveedores y Repuestos
 
-1. El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono, correo
-    electrónico, ciudad).
+El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono, correo
+electrónico, ciudad).
 
   ```sql
   INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
@@ -114,8 +114,8 @@ COMMIT;
 
 
 
-4. El administrador ingresa los detalles del repuesto (nombre, descripción, precio, stock,
-    proveedor).
+El administrador ingresa los detalles del repuesto (nombre, descripción, precio, stock,
+proveedor).
 
   ```sql
   INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
@@ -124,90 +124,90 @@ COMMIT;
 
 
 
-7. El administrador actualiza la información del proveedor.
+El administrador actualiza la información del proveedor.
 
-   ```sql
-   UPDATE proveedores 
-   SET nombre = 'la liendra'
-   WHERE id = 6; //aqui va es un trigger
-   ```
+```sql
+UPDATE proveedores 
+SET nombre = 'la liendra'
+WHERE id = 6; //aqui va es un trigger
+```
 
-   
 
-8. El administrador selecciona un repuesto existente para actualizar.
 
-   ```sql
-   UPDATE repuestos 
-   SET nombre = 'reykon', descripcion = 'pelea epica por luisa castro'
-   WHERE id = 6;  //aqui va es un trigger
-   ```
+El administrador selecciona un repuesto existente para actualizar.
 
-   
+```sql
+UPDATE repuestos 
+SET nombre = 'reykon', descripcion = 'pelea epica por luisa castro'
+WHERE id = 6;  //aqui va es un trigger
+```
 
-9. El administrador selecciona un proveedor para eliminar.
 
-   ```sql
-   DELETE FROM proveedores 
-   WHERE id = 6;	 //aqui va es un trigger
-   ```
 
-   
+El administrador selecciona un proveedor para eliminar.
 
-10. El administrador selecciona un repuesto para eliminar.
+```sql
+DELETE FROM proveedores 
+WHERE id = 6;	 //aqui va es un trigger
+```
 
-    ```sql
-    DELETE FROM repuestos 
-    WHERE id = 6;  //aqui va es un trigger
-    ```
 
-    
+
+El administrador selecciona un repuesto para eliminar.
+
+```sql
+DELETE FROM repuestos 
+WHERE id = 6;  //aqui va es un trigger
+```
+
+
 
 ### Caso de Uso 4: Consulta de Historial de Ventas por Cliente
 
-1. El usuario selecciona la opción para consultar el historial de ventas.
+El usuario selecciona la opción para consultar el historial de ventas.
 
-   ```sql
-   SELECT id, fecha, cliente_id 
-   FROM ventas;
-   ```
+```sql
+SELECT id, fecha, cliente_id 
+FROM ventas;
+```
 
-   
 
-2. El usuario selecciona el cliente del cual desea ver el historial.
 
-   ```sql
-   SELECT id, fecha, cliente_id 
-   FROM ventas
-   WHERE id = 1;
-   ```
+El usuario selecciona el cliente del cual desea ver el historial.
 
-   
+```sql
+SELECT id, fecha, cliente_id 
+FROM ventas
+WHERE id = 1;
+```
 
-3. El sistema muestra todas las ventas realizadas por el cliente seleccionado.
 
-   ```sql
-   +----+------------+------------+
-   | id | fecha      | cliente_id |
-   +----+------------+------------+
-   |  1 | 2023-01-15 |          1 |
-   +----+------------+------------+
-   ```
 
-   
+El sistema muestra todas las ventas realizadas por el cliente seleccionado.
 
-4. El usuario selecciona una venta específica para ver los detalles.
+```sql
++----+------------+------------+
+| id | fecha      | cliente_id |
++----+------------+------------+
+|  1 | 2023-01-15 |          1 |
++----+------------+------------+
+```
 
-   ```sql
-   SELECT v.id AS "Id de la venta", v.fecha AS "Fecha de la compra", d.venta_id, d.cantidad, d.precio_unitario
-   FROM ventas AS v
-   JOIN detalles_de_ventas AS d ON v.id = d.venta_id
-   WHERE v.id = 1;
-   ```
 
-   
 
-5. El sistema muestra los detalles de la venta seleccionada (bicicletas compradas, cantidad,
-    precio).
+El usuario selecciona una venta específica para ver los detalles.
+
+```sql
+SELECT v.id AS "Id de la venta", v.fecha AS "Fecha de la compra", d.venta_id, d.cantidad, d.precio_unitario
+FROM ventas AS v
+JOIN detalles_de_ventas AS d ON v.id = d.venta_id
+WHERE v.id = 1;
+```
+
+
+
+El sistema muestra los detalles de la venta seleccionada (bicicletas compradas, cantidad,
+precio).
 
   ```sql
   SELECT Bicicleta_id, venta_id AS "Id de la compra", cantidad, precio_unitario
@@ -218,53 +218,53 @@ COMMIT;
 
 ### Caso de Uso 5: Gestión de Compras de Repuestos
 
-1. El administrador selecciona la opción para registrar una nueva compra.
+El administrador selecciona la opción para registrar una nueva compra.
 
-   ```sql
-   INSERT INTO compras (fecha, proveedor_id, total)
-   VALUES ('2024-07-25', 1, 10000); //aqui va es un trigger
-   ```
+```sql
+INSERT INTO compras (fecha, proveedor_id, total)
+VALUES ('2024-07-25', 1, 10000); //aqui va es un trigger
+```
 
-   
 
-2. El administrador selecciona el proveedor al que se realizó la compra.
 
-   ```sql
-   SELECT id ,fecha, proveedor_id, total
-   FROM compras
-   WHERE id = 6;
-   ```
+El administrador selecciona el proveedor al que se realizó la compra.
 
-   
+```sql
+SELECT id ,fecha, proveedor_id, total
+FROM compras
+WHERE id = 6;
+```
 
-3. El administrador ingresa los detalles de la compra (fecha, total).
 
-   ```sql
-   INSERT INTO () //aqui va es un trigger
-   ```
 
-   
+El administrador ingresa los detalles de la compra (fecha, total).
 
-4. El sistema guarda la compra y genera un identificador único.
+```sql
+INSERT INTO () //aqui va es un trigger
+```
 
-   ```sql
-   
-   ```
 
-5. El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
-   unitario.
 
-   ```sql
-   
-   ```
+El sistema guarda la compra y genera un identificador único.
 
-   
+```sql
 
-6. El sistema guarda los detalles de la compra y actualiza el stock de los repuestos comprados.
+```
 
-   ```sql
-   
-   ```
+El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
+unitario.
+
+```sql
+
+```
+
+
+
+El sistema guarda los detalles de la compra y actualiza el stock de los repuestos comprados.
+
+```sql
+
+```
 
 
 
@@ -276,26 +276,26 @@ COMMIT;
 
 ### Caso de Uso 6: Consulta de Bicicletas Más Vendidas por Marca
 
-1. El usuario selecciona la opción para consultar las bicicletas más vendidas por marca.
+El usuario selecciona la opción para consultar las bicicletas más vendidas por marca.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El sistema muestra una lista de marcas y el modelo de bicicleta más vendido para cada marca.
 
-   ```sql
-   
-   ```
 
-   
+El sistema muestra una lista de marcas y el modelo de bicicleta más vendido para cada marca.
+
+```sql
+
+```
+
+
 
 ### Caso de Uso 7: Clientes con Mayor Gasto en un Año Específico
 
-1. El administrador selecciona la opción para consultar los clientes con mayor gasto en un año
-    específico.
+El administrador selecciona la opción para consultar los clientes con mayor gasto en un año
+específico.
 
   ```sql
   
@@ -303,27 +303,27 @@ COMMIT;
 
   
 
-3. El administrador ingresa el año deseado.
+El administrador ingresa el año deseado.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-4. El sistema muestra una lista de los clientes que han gastado más en ese año, ordenados por
-   total gastado.
 
-   ```sql
-   
-   ```
 
-   
+El sistema muestra una lista de los clientes que han gastado más en ese año, ordenados por
+total gastado.
+
+```sql
+
+```
+
+
 
 ### Caso de Uso 8: Proveedores con Más Compras en el Último Mes
 
-1. El administrador selecciona la opción para consultar los proveedores con más compras en el
-    último mes.
+El administrador selecciona la opción para consultar los proveedores con más compras en el
+último mes.
 
   ```sql
   
@@ -331,8 +331,8 @@ COMMIT;
 
   
 
-3. El sistema muestra una lista de proveedores ordenados por el número de compras recibidas
-    en el último mes.
+El sistema muestra una lista de proveedores ordenados por el número de compras recibidas
+en el último mes.
 
   ```sql
   
@@ -342,16 +342,16 @@ COMMIT;
 
 ### Caso de Uso 9: Repuestos con Menor Rotación en el Inventario
 
-1. El administrador selecciona la opción para consultar los repuestos con menor rotación.
+El administrador selecciona la opción para consultar los repuestos con menor rotación.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de menor a
-    mayor.
+
+
+El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de menor a
+mayor.
 
   ```sql
   
@@ -361,19 +361,19 @@ COMMIT;
 
 ### Caso de Uso 10: Ciudades con Más Ventas Realizadas
 
-1. El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
+El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
 
-   ```sql
-   
-   ```
+
+El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
+
+```sql
+
+```
 
 
 
@@ -385,74 +385,74 @@ COMMIT;
 
 ### Caso de Uso 11: Consulta de Ventas por Ciudad
 
-1. El administrador selecciona la opción para consultar las ventas por ciudad.
+El administrador selecciona la opción para consultar las ventas por ciudad.
 
-   ```sql
-   SELECT v.fecha, c.nombre AS 'nombre del cliente', c.email, c.telefono, c.password, ci.nombre AS 'nombre de la ciudad'
-   FROM ventas AS v
-   JOIN clientes AS c ON v.cliente_id = c.id
-   JOIN ciudades AS ci ON c.ciudad_id = ci.id;
-   ```
+```sql
+SELECT v.fecha, c.nombre AS 'nombre del cliente', c.email, c.telefono, c.password, ci.nombre AS 'nombre de la ciudad'
+FROM ventas AS v
+JOIN clientes AS c ON v.cliente_id = c.id
+JOIN ciudades AS ci ON c.ciudad_id = ci.id;
+```
 
-   
 
-2. El sistema muestra una lista de ciudades con el total de ventas realizadas en cada una.
 
-   ```sql
-   SELECT ci.nombre, de.cantidad
-   FROM ciudades AS ci
-   JOIN clientes AS c ON ci.id = c.ciudad_id
-   JOIN ventas AS v ON c.id = v.cliente_id
-   JOIN detalles_de_ventas AS de ON v.id = de.venta_id;
-   ```
+El sistema muestra una lista de ciudades con el total de ventas realizadas en cada una.
 
-   ```sql
-   +--------------+----------+
-   | nombre       | cantidad |
-   +--------------+----------+
-   | Bogotá       |        1 |
-   | Medellín     |        2 |
-   | Cali         |        3 |
-   | Barranquilla |        1 |
-   | Cartagena    |        2 |
-   +--------------+----------+
-   ```
+```sql
+SELECT ci.nombre, de.cantidad
+FROM ciudades AS ci
+JOIN clientes AS c ON ci.id = c.ciudad_id
+JOIN ventas AS v ON c.id = v.cliente_id
+JOIN detalles_de_ventas AS de ON v.id = de.venta_id;
+```
 
-   
+```sql
++--------------+----------+
+| nombre       | cantidad |
++--------------+----------+
+| Bogotá       |        1 |
+| Medellín     |        2 |
+| Cali         |        3 |
+| Barranquilla |        1 |
+| Cartagena    |        2 |
++--------------+----------+
+```
+
+
 
 ### Caso de Uso 12: Consulta de Proveedores por País
 
-1. El administrador selecciona la opción para consultar los proveedores por país.
+El administrador selecciona la opción para consultar los proveedores por país.
 
-   ```sql
-   SELECT p.nombre AS 'nombre de los paises', pr.nombre AS 'nombre proveedor'
-   FROM proveedores AS pr
-   JOIN ciudades AS c ON pr.ciudad_id = c.id
-   JOIN paises AS p ON c.pais_id = p.id;
-   ```
+```sql
+SELECT p.nombre AS 'nombre de los paises', pr.nombre AS 'nombre proveedor'
+FROM proveedores AS pr
+JOIN ciudades AS c ON pr.ciudad_id = c.id
+JOIN paises AS p ON c.pais_id = p.id;
+```
 
-   
 
-2. El sistema muestra una lista de países con los proveedores en cada país.
 
-   ```sql
-   +----------------------+------------------+
-   | nombre de los paises | nombre proveedor |
-   +----------------------+------------------+
-   | Estados Unidos       | Giant            |
-   | México               | Scott            |
-   | Canadá               | Specialized      |
-   | España               | Trek             |
-   | Colombia             | Mongoose         |
-   +----------------------+------------------+
-   ```
+El sistema muestra una lista de países con los proveedores en cada país.
 
-   
+```sql
++----------------------+------------------+
+| nombre de los paises | nombre proveedor |
++----------------------+------------------+
+| Estados Unidos       | Giant            |
+| México               | Scott            |
+| Canadá               | Specialized      |
+| España               | Trek             |
+| Colombia             | Mongoose         |
++----------------------+------------------+
+```
+
+
 
 ### Caso de Uso 13: Compras de Repuestos por Proveedor
 
-1. El administrador selecciona la opción para consultar las compras de repuestos por
-    proveedor.
+El administrador selecciona la opción para consultar las compras de repuestos por
+proveedor.
 
   ```sql
   SELECT p.nombre AS "nombre del proveedor", d.cantidad AS "cantidad de compras al proveedor"
@@ -463,8 +463,8 @@ COMMIT;
 
   
 
-3. El sistema muestra una lista de proveedores con el total de repuestos comprados a cada
-    uno.
+El sistema muestra una lista de proveedores con el total de repuestos comprados a cada
+uno.
 
   ```sql
   +----------------------+----------------------------------+
@@ -482,24 +482,24 @@ COMMIT;
 
 ### Caso de Uso 14: Clientes con Ventas en un Rango de Fechas
 
-1. El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
+El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El usuario ingresa las fechas de inicio y fin del rango.
 
-   ```sql
-   
-   ```
 
-   
+El usuario ingresa las fechas de inicio y fin del rango.
 
-3. El sistema muestra una lista de clientes que han realizado compras dentro del rango de
-    fechas especificado.
+```sql
+
+```
+
+
+
+El sistema muestra una lista de clientes que han realizado compras dentro del rango de
+fechas especificado.
 
   ```sql
   
@@ -515,24 +515,16 @@ COMMIT;
 
 ### Caso de Uso 1: Actualización de Inventario de Bicicletas
 
-1. El vendedor ingresa al sistema.
+El vendedor registra una venta de bicicletas.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El vendedor registra una venta de bicicletas.
 
-   ```sql
-   
-   ```
 
-   
-
-3. El sistema llama a un procedimiento almacenado para actualizar el inventario de las
-    bicicletas vendidas.
+El sistema llama a un procedimiento almacenado para actualizar el inventario de las
+bicicletas vendidas.
 
   ```sql
   
@@ -540,76 +532,60 @@ COMMIT;
 
   
 
-4. El procedimiento almacenado actualiza el stock de cada bicicleta.
+El procedimiento almacenado actualiza el stock de cada bicicleta.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
+
+
 
 ### Caso de Uso 2: Registro de Nueva Venta
 
-1. El vendedor ingresa al sistema.
+El vendedor registra una nueva venta.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El vendedor registra una nueva venta.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para registrar la venta y sus detalles.
 
-3. El sistema llama a un procedimiento almacenado para registrar la venta y sus detalles.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado inserta la venta y sus detalles en las tablas correspondientes.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado inserta la venta y sus detalles en las tablas correspondientes.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 3: Generación de Reporte de Ventas por Cliente
 
-1. El administrador ingresa al sistema.
+El administrador selecciona un cliente para generar un reporte de ventas.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona un cliente para generar un reporte de ventas.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para generar el reporte.
 
-3. El sistema llama a un procedimiento almacenado para generar el reporte.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado obtiene las ventas y los detalles de las ventas realizadas por el
-    cliente.
+
+El procedimiento almacenado obtiene las ventas y los detalles de las ventas realizadas por el
+cliente.
 
   ```sql
   
@@ -619,32 +595,24 @@ COMMIT;
 
 ### Caso de Uso 4: Registro de Compra de Repuestos
 
-1. El administrador de compras ingresa al sistema.
+El administrador registra una nueva compra.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador registra una nueva compra.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para registrar la compra y sus detalles.
 
-3. El sistema llama a un procedimiento almacenado para registrar la compra y sus detalles.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado inserta la compra y sus detalles en las tablas correspondientes
-    y actualiza el stock de repuestos.
+
+El procedimiento almacenado inserta la compra y sus detalles en las tablas correspondientes
+y actualiza el stock de repuestos.
 
   ```sql
   
@@ -654,74 +622,58 @@ COMMIT;
 
 ### Caso de Uso 5: Generación de Reporte de Inventario
 
-1. El administrador de inventario ingresa al sistema.
+El administrador solicita un reporte de inventario.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador solicita un reporte de inventario.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para generar el reporte.
 
-3. El sistema llama a un procedimiento almacenado para generar el reporte.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado obtiene la información del inventario de bicicletas y repuestos.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado obtiene la información del inventario de bicicletas y repuestos.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 6: Actualización Masiva de Precios
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para actualizar los precios de una marca específica.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para actualizar los precios de una marca específica.
 
-   ```sql
-   
-   ```
 
-   
+El administrador ingresa la marca y el porcentaje de incremento.
 
-3. El administrador ingresa la marca y el porcentaje de incremento.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El sistema llama a un procedimiento almacenado para actualizar los precios.
 
-   ```sql
-   
-   ```
+El sistema llama a un procedimiento almacenado para actualizar los precios.
 
-   
+```sql
 
-5. El procedimiento almacenado actualiza los precios de todas las bicicletas de la marca
-    especificada.
+```
+
+
+
+El procedimiento almacenado actualiza los precios de todas las bicicletas de la marca
+especificada.
 
   ```sql
   
@@ -731,66 +683,50 @@ COMMIT;
 
 ### Caso de Uso 7: Generación de Reporte de Clientes por Ciudad
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para generar un reporte de clientes por ciudad.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para generar un reporte de clientes por ciudad.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para generar el reporte.
 
-3. El sistema llama a un procedimiento almacenado para generar el reporte.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado obtiene la información de los clientes agrupados por ciudad.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado obtiene la información de los clientes agrupados por ciudad.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 8: Verificación de Stock antes de Venta
 
-1. El vendedor ingresa al sistema.
+El vendedor selecciona una bicicleta para vender.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El vendedor selecciona una bicicleta para vender.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para verificar el stock.
 
-3. El sistema llama a un procedimiento almacenado para verificar el stock.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve un mensaje indicando si hay suficiente stock para
-    realizar la venta.
+
+El procedimiento almacenado devuelve un mensaje indicando si hay suficiente stock para
+realizar la venta.
 
   ```sql
   
@@ -800,66 +736,50 @@ COMMIT;
 
 ### Caso de Uso 9: Registro de Devoluciones
 
-1. El vendedor ingresa al sistema.
+El vendedor registra una devolución de bicicleta.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El vendedor registra una devolución de bicicleta.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para registrar la devolución.
 
-3. El sistema llama a un procedimiento almacenado para registrar la devolución.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado inserta la devolución y actualiza el stock de la bicicleta.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado inserta la devolución y actualiza el stock de la bicicleta.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 10: Generación de Reporte de Compras por Proveedor
 
-1. El administrador de compras ingresa al sistema.
+El administrador selecciona un proveedor para generar un reporte de compras.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona un proveedor para generar un reporte de compras.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para generar el reporte.
 
-3. El sistema llama a un procedimiento almacenado para generar el reporte.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado obtiene las compras y los detalles de las compras realizadas al
-    proveedor.
+
+El procedimiento almacenado obtiene las compras y los detalles de las compras realizadas al
+proveedor.
 
   ```sql
   
@@ -869,35 +789,27 @@ COMMIT;
 
 ### Caso de Uso 11: Calculadora de Descuentos en Ventas
 
-1. El vendedor ingresa al sistema.
+El vendedor aplica un descuento a una venta.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El vendedor aplica un descuento a una venta.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el total con descuento.
 
-3. El sistema llama a un procedimiento almacenado para calcular el total con descuento.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado calcula el total con el descuento aplicado y registra la venta.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado calcula el total con el descuento aplicado y registra la venta.
+
+```sql
+
+```
 
 
 
@@ -909,100 +821,68 @@ COMMIT;
 
 ### Caso de Uso 1: Calcular el Total de Ventas Mensuales
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el total de ventas mensuales.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el total de ventas mensuales.
 
-   ```sql
-   
-   ```
 
-   
+El administrador ingresa el mes y el año.
 
-3. El administrador ingresa el mes y el año.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
-   ```sql
-   
-   ```
+El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
-   
+```sql
 
-5. El procedimiento almacenado devuelve el total de ventas del mes especificado.
+```
 
-   ```sql
-   
-   ```
 
-   
+
+El procedimiento almacenado devuelve el total de ventas del mes especificado.
+
+```sql
+
+```
+
+
 
 ### Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
 
-1. El administrador ingresa al sistema.
+El administrador ingresa el ID del cliente.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el promedio de ventas por cliente.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el promedio de ventas.
 
-3. El administrador ingresa el ID del cliente.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El sistema llama a un procedimiento almacenado para calcular el promedio de ventas.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado devuelve el promedio de ventas del cliente especificado.
 
-   
+```sql
 
-5. El procedimiento almacenado devuelve el promedio de ventas del cliente especificado.
+```
 
-   ```sql
-   
-   ```
 
-   
 
 ### Caso de Uso 3: Contar el Número de Ventas Realizadas en un Rango de Fechas
 
-1. El administrador ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para contar el número de ventas en un rango de
-    fechas.
+El administrador selecciona la opción para contar el número de ventas en un rango de
+fechas.
 
   ```sql
   
@@ -1010,24 +890,24 @@ COMMIT;
 
   
 
-3. El administrador ingresa las fechas de inicio y fin.
+El administrador ingresa las fechas de inicio y fin.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-4. El sistema llama a un procedimiento almacenado para contar las ventas.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para contar las ventas.
 
-5. El procedimiento almacenado devuelve el número de ventas en el rango de fechas
-    especificado.
+```sql
+
+```
+
+
+
+El procedimiento almacenado devuelve el número de ventas en el rango de fechas
+especificado.
 
   ```sql
   
@@ -1037,16 +917,8 @@ COMMIT;
 
 ### Caso de Uso 4: Calcular el Total de Repuestos Comprados por Proveedor
 
-1. El administrador de compras ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para calcular el total de repuestos comprados por
-    proveedor.
+El administrador selecciona la opción para calcular el total de repuestos comprados por
+proveedor.
 
   ```sql
   
@@ -1054,24 +926,24 @@ COMMIT;
 
   
 
-3. El administrador ingresa el ID del proveedor.
+El administrador ingresa el ID del proveedor.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-4. El sistema llama a un procedimiento almacenado para calcular el total de repuestos.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el total de repuestos.
 
-5. El procedimiento almacenado devuelve el total de repuestos comprados al proveedor
-    especificado.
+```sql
+
+```
+
+
+
+El procedimiento almacenado devuelve el total de repuestos comprados al proveedor
+especificado.
 
   ```sql
   
@@ -1081,82 +953,66 @@ COMMIT;
 
 ### Caso de Uso 5: Calcular el Ingreso Total por Año
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el ingreso total por año.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el ingreso total por año.
 
-   ```sql
-   
-   ```
 
-   
+El administrador ingresa el año.
 
-3. El administrador ingresa el año.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El sistema llama a un procedimiento almacenado para calcular el ingreso total.
 
-   ```sql
-   
-   ```
+El sistema llama a un procedimiento almacenado para calcular el ingreso total.
 
-   
+```sql
 
-5. El procedimiento almacenado devuelve el ingreso total del año especificado.
+```
 
-   ```sql
-   
-   ```
 
-   
+
+El procedimiento almacenado devuelve el ingreso total del año especificado.
+
+```sql
+
+```
+
+
 
 ### Caso de Uso 6: Calcular el Número de Clientes Activos en un Mes
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para contar el número de clientes activos en un mes.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para contar el número de clientes activos en un mes.
 
-   ```sql
-   
-   ```
 
-   
+El administrador ingresa el mes y el año.
 
-3. El administrador ingresa el mes y el año.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El sistema llama a un procedimiento almacenado para contar los clientes activos.
 
-   ```sql
-   
-   ```
+El sistema llama a un procedimiento almacenado para contar los clientes activos.
 
-   
+```sql
 
-5. El procedimiento almacenado devuelve el número de clientes que han realizado compras en
-    el mes especificado.
+```
+
+
+
+El procedimiento almacenado devuelve el número de clientes que han realizado compras en
+el mes especificado.
 
   ```sql
   
@@ -1166,142 +1022,110 @@ COMMIT;
 
 ### Caso de Uso 7: Calcular el Promedio de Compras por Proveedor
 
-1. El administrador de compras ingresa al sistema.
+El administrador selecciona la opción para calcular el promedio de compras por proveedor.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el promedio de compras por proveedor.
 
-   ```sql
-   
-   ```
 
-   
+El administrador ingresa el ID del proveedor.
 
-3. El administrador ingresa el ID del proveedor.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El sistema llama a un procedimiento almacenado para calcular el promedio de compras.
 
-   ```sql
-   
-   ```
+El sistema llama a un procedimiento almacenado para calcular el promedio de compras.
 
-   
+```sql
 
-5. El procedimiento almacenado devuelve el promedio de compras del proveedor especificado.
+```
 
-   ```sql
-   
-   ```
 
-   
+
+El procedimiento almacenado devuelve el promedio de compras del proveedor especificado.
+
+```sql
+
+```
+
+
 
 ### Caso de Uso 8: Calcular el Total de Ventas por Marca
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el total de ventas por marca.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el total de ventas por marca.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el total de ventas por marca.
 
-3. El sistema llama a un procedimiento almacenado para calcular el total de ventas por marca.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve el total de ventas agrupadas por marca.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado devuelve el total de ventas agrupadas por marca.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 9: Calcular el Promedio de Precios de Bicicletas por Marca
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el promedio de precios por marca.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el promedio de precios por marca.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el promedio de precios.
 
-3. El sistema llama a un procedimiento almacenado para calcular el promedio de precios.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve el promedio de precios agrupadas por marca.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado devuelve el promedio de precios agrupadas por marca.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 10: Contar el Número de Repuestos por Proveedor
 
-1. El administrador de compras ingresa al sistema.
+El administrador selecciona la opción para contar el número de repuestos por proveedor.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para contar el número de repuestos por proveedor.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para contar los repuestos.
 
-3. El sistema llama a un procedimiento almacenado para contar los repuestos.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve el número de repuestos suministrados por cada
-    proveedor.
+
+El procedimiento almacenado devuelve el número de repuestos suministrados por cada
+proveedor.
 
   ```sql
   
@@ -1311,58 +1135,42 @@ COMMIT;
 
 ### Caso de Uso 11: Calcular el Total de Ingresos por Cliente
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el total de ingresos por cliente.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el total de ingresos por cliente.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el total de ingresos.
 
-3. El sistema llama a un procedimiento almacenado para calcular el total de ingresos.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve el total de ingresos generados por cada cliente.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado devuelve el total de ingresos generados por cada cliente.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 12: Calcular el Promedio de Compras Mensuales
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el promedio de compras mensuales.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el promedio de compras mensuales.
 
-   ```sql
-   
-   ```
 
-   
-
-3. El sistema llama a un procedimiento almacenado para calcular el promedio de compras
-    mensuales.
+El sistema llama a un procedimiento almacenado para calcular el promedio de compras
+mensuales.
 
   ```sql
   
@@ -1370,60 +1178,44 @@ COMMIT;
 
   
 
-4. El procedimiento almacenado devuelve el promedio de compras realizadas mensualmente.
+El procedimiento almacenado devuelve el promedio de compras realizadas mensualmente.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
+
+
 
 ### Caso de Uso 13: Calcular el Total de Ventas por Día de la Semana
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el total de ventas por día de la semana.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el total de ventas por día de la semana.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
-3. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve el total de ventas agrupadas por día de la semana.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado devuelve el total de ventas agrupadas por día de la semana.
 
-   
+```sql
+
+```
+
+
 
 ### Caso de Uso 14: Contar el Número de Ventas por Categoría de Bicicleta
 
-1. El administrador ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para contar el número de ventas por categoría de
-    bicicleta.
+El administrador selecciona la opción para contar el número de ventas por categoría de
+bicicleta.
 
   ```sql
   
@@ -1431,52 +1223,43 @@ COMMIT;
 
   
 
-3. El sistema llama a un procedimiento almacenado para contar las ventas.
+El sistema llama a un procedimiento almacenado para contar las ventas.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-4. El procedimiento almacenado devuelve el número de ventas por categoría de bicicleta.
 
-   ```sql
-   
-   ```
 
-   
+El procedimiento almacenado devuelve el número de ventas por categoría de bicicleta.
+
+```sql
+
+```
+
+
 
 ### Caso de Uso 15: Calcular el Total de Ventas por Año y Mes
 
-1. El administrador ingresa al sistema.
+El administrador selecciona la opción para calcular el total de ventas por año y mes.
 
-   ```sql
-   
-   ```
+```sql
 
-   
+```
 
-2. El administrador selecciona la opción para calcular el total de ventas por año y mes.
 
-   ```sql
-   
-   ```
 
-   
+El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
-3. El sistema llama a un procedimiento almacenado para calcular el total de ventas.
+```sql
 
-   ```sql
-   
-   ```
+```
 
-   
 
-4. El procedimiento almacenado devuelve el total de ventas agrupadas por año y mes.
 
-   ```sql
-   
-   ```
+El procedimiento almacenado devuelve el total de ventas agrupadas por año y mes.
 
-   
+```sql
+
+```
+
