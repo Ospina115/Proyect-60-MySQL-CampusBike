@@ -76,147 +76,88 @@ GROUP BY v.id;
 El sistema guarda la venta y actualiza el inventario de bicicletas.
 
 ```sql
+DELIMITER //
 
+CREATE TRIGGER actualizar_stock_bicicleta
+AFTER INSERT ON detalles_de_ventas
+FOR EACH ROW
+BEGIN
+    UPDATE bicicletas
+    SET stock = stock - NEW.cantidad
+    WHERE id = NEW.bicicleta_id;
+END;
+
+//
+
+DELIMITER ;
+
+BEGIN;
+INSERT INTO ventas (fecha, cliente_id)
+VALUES ('2005-08-31', 1);
+
+INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
+VALUES (LAST_INSERT_ID(), 5, 3, 4000000.50);
+COMMIT;
 ```
 
 
 
 ### Caso de Uso 3: Gestión de Proveedores y Repuestos
 
-1. El administrador de proveedores ingresa al sistema.
-
-   ```sql
-   
-   ```
-
-   
-
-2. El administrador selecciona la opción para agregar un nuevo proveedor.
-
-   ```sql
-   
-   ```
-
-   
-
-3. El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono, correo
+1. El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono, correo
     electrónico, ciudad).
 
   ```sql
-  
+  INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
+  VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7);
   ```
 
-  
 
-4. El sistema valida y guarda la información del nuevo proveedor.
 
-   ```sql
-   
-   ```
-
-   
-
-5. El administrador selecciona la opción para agregar un nuevo repuesto.
-
-   ```sql
-   
-   ```
-
-   
-
-6. El administrador ingresa los detalles del repuesto (nombre, descripción, precio, stock,
+4. El administrador ingresa los detalles del repuesto (nombre, descripción, precio, stock,
     proveedor).
 
   ```sql
-  
+  INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
+  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 );
   ```
 
-  
 
-7. El sistema valida y guarda la información del nuevo repuesto.
+
+7. El administrador actualiza la información del proveedor.
 
    ```sql
-   
+   UPDATE proveedores 
+   SET nombre = 'la liendra'
+   WHERE id = 6;
    ```
 
    
 
-8. El administrador selecciona un proveedor existente para actualizar.
+8. El administrador selecciona un repuesto existente para actualizar.
 
    ```sql
-   
+   UPDATE repuestos 
+   SET nombre = 'reykon', descripcion = 'pelea epica por luisa castro'
+   WHERE id = 6;
    ```
 
    
 
-9. El administrador actualiza la información del proveedor.
+9. El administrador selecciona un proveedor para eliminar.
 
    ```sql
-   
+   DELETE FROM proveedores 
+   WHERE id = 6;
    ```
 
    
 
-10. El sistema valida y guarda los cambios.
+10. El administrador selecciona un repuesto para eliminar.
 
     ```sql
-    
-    ```
-
-    
-
-11. El administrador selecciona un repuesto existente para actualizar.
-
-    ```sql
-    
-    ```
-
-    
-
-12. El administrador actualiza la información del repuesto.
-
-    ```sql
-    
-    ```
-
-    
-
-13. El sistema valida y guarda los cambios.
-
-    ```sql
-    
-    ```
-
-    
-
-14. El administrador selecciona un proveedor para eliminar.
-
-    ```sql
-    
-    ```
-
-    
-
-15. El sistema elimina el proveedor seleccionado.
-
-    ```sql
-    
-    ```
-
-    
-
-16. El administrador selecciona un repuesto para eliminar.
-
-    ```sql
-    
-    ```
-
-    
-
-17. El sistema elimina el repuesto seleccionado.
-
-    ```sql
-    
+    DELETE FROM repuestos 
+    WHERE id = 6;
     ```
 
     
