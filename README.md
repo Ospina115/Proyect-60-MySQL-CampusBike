@@ -61,6 +61,18 @@ BEGIN
 END //
 DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER numnegativos_stock
+BEFORE INSERT ON bicicletas
+FOR EACH ROW
+BEGIN
+	IF NEW.stock < 1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El precio no puede ser menor a uno';
+	END IF;
+END //
+DELIMITER ;
+
 INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
 (3, 2, 6000000.50, 5);
 ```
@@ -186,8 +198,50 @@ El administrador ingresa los detalles del repuesto (nombre, descripción, precio
 proveedor).
 
   ```sql
+  DELIMITER //
+  CREATE TRIGGER verificacion_repuestos
+  BEFORE INSERT ON repuestos
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.nombre IS NULL 
+  	OR NEW.descripcion IS NULL 
+  	OR NEW.precio IS NULL 
+  	OR NEW.stock IS NULL
+  	OR NEW.modelo IS NULL
+  	OR NEW.marca IS NULL
+  	THEN
+  	SIGNAL SQLSTATE '45000'
+  	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+  	END IF;
+  END //
+  DELIMITER ;
+  
+  DELIMITER //
+  CREATE TRIGGER numnegativos_repuestos
+  BEFORE INSERT ON repuestos
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.precio < 0 THEN
+  		SIGNAL SQLSTATE '45000'
+  		SET MESSAGE_TEXT = 'El precio no puede ser un numero negativo';
+  	END IF;
+  END //
+  DELIMITER ;
+  
+  DELIMITER //
+  CREATE TRIGGER numnegativos_stock
+  BEFORE INSERT ON repuestos
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.stock < 1 THEN
+  		SIGNAL SQLSTATE '45000'
+  		SET MESSAGE_TEXT = 'El precio no puede ser menor a uno';
+  	END IF;
+  END //
+  DELIMITER ;
+  
   INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
-  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 ); //aqui va es un trigger
+  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 );
   ```
 
 
@@ -197,7 +251,7 @@ El administrador actualiza la información del proveedor.
 ```sql
 UPDATE proveedores 
 SET nombre = 'la liendra'
-WHERE id = 6; //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -207,7 +261,7 @@ El administrador selecciona un repuesto existente para actualizar.
 ```sql
 UPDATE repuestos 
 SET nombre = 'reykon', descripcion = 'pelea epica por luisa castro'
-WHERE id = 6;  //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -216,7 +270,7 @@ El administrador selecciona un proveedor para eliminar.
 
 ```sql
 DELETE FROM proveedores 
-WHERE id = 6;	 //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -225,7 +279,7 @@ El administrador selecciona un repuesto para eliminar.
 
 ```sql
 DELETE FROM repuestos 
-WHERE id = 6;  //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -286,44 +340,76 @@ precio).
 
 ### Caso de Uso 5: Gestión de Compras de Repuestos
 
-El administrador selecciona la opción para registrar una nueva compra.
-
-```sql
-INSERT INTO compras (fecha, proveedor_id, total)
-VALUES ('2024-07-25', 1, 10000); //aqui va es un trigger
-```
-
-
-
-El administrador selecciona el proveedor al que se realizó la compra.
-
-```sql
-SELECT id ,fecha, proveedor_id, total
-FROM compras
-WHERE id = 6;
-```
-
-
-
 El administrador ingresa los detalles de la compra (fecha, total).
 
 ```sql
-INSERT INTO () //aqui va es un trigger
+CREATE TRIGGER verificacion_compras
+BEFORE INSERT ON compras
+FOR EACH ROW
+BEGIN
+	IF NEW.fecha IS NULL 
+	OR NEW.proveedor_id IS NULL 
+	OR NEW.total IS NULL 
+	THEN
+	SIGNAL SQLSTATE '45000'
+	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+	END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER totalnegativo_compras
+BEFORE INSERT ON compras
+FOR EACH ROW
+BEGIN
+	IF NEW.total < 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El total no debe ser un numero negativo';
+	END IF;
+END //
+DELIMITER ;
+
+INSERT INTO compras (fecha, proveedor_id, total)
+VALUES ('2024-07-25', 1, 10000);
 ```
 
 
-
-El sistema guarda la compra y genera un identificador único.
-
-```sql
-
-```
 
 El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
 unitario.
 
 ```sql
+CREATE TRIGGER verificacion_repuestos
+BEFORE INSERT ON repuestos
+FOR EACH ROW
+BEGIN
+	IF NEW.nombre IS NULL 
+	OR NEW.descripcion IS NULL 
+	OR NEW.precio IS NULL
+    OR NEW.stock IS NULL
+    OR NEW.proveedor_id IS NULL
+    OR NEW.modelo IS NULL
+    OR NEW.marca IS NULL
+	THEN
+	SIGNAL SQLSTATE '45000'
+	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+	END IF;
+END //
+DELIMITER ;
 
+DELIMITER //
+CREATE TRIGGER numnegativos_stock
+BEFORE INSERT ON repuestos
+FOR EACH ROW
+BEGIN
+	IF NEW.stock < 1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El stock no puede ser menor a uno';
+	END IF;
+END //
+DELIMITER ;
+
+INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
 ```
 
 
