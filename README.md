@@ -23,8 +23,46 @@ Joseph Samuel Ospina
 El administrador ingresa los detalles de la bicicleta (modelo, marca, precio, stock).
 
 ```sql
+DELIMITER //
+CREATE TRIGGER insertar_bicicletas
+AFTER INSERT ON bicicletas
+FOR EACH ROW
+BEGIN
+	INSERT INTO bicibletas (modelo, marca, precio, stock) VALUES
+	(NEW.modelo, NEW.marca, NEW.precio, NEW.stock);
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER verificacion_bicicletas
+BEFORE INSERT ON bicicletas
+FOR EACH ROW
+BEGIN
+	IF NEW.modelo IS NULL 
+	OR NEW.marca IS NULL 
+	OR NEW.precio IS NULL 
+	OR NEW.stock IS NULL
+	THEN
+	SIGNAL SQLSTATE '45000'
+	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+	END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER numnegativos_bicicletas
+BEFORE INSERT ON bicicletas
+FOR EACH ROW
+BEGIN
+	IF NEW.precio < 0 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El precio no puede ser un numero negativo';
+	END IF;
+END //
+DELIMITER ;
+
 INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
-(3, 2, 6000000.50, 5);  //aqui va es un trigger
+(3, 2, 6000000.50, 5);
 ```
 
 
@@ -34,14 +72,14 @@ El administrador actualiza la información (precio, stock).
 ```sql
 UPDATE bicicletas 
 SET precio = 8000000.00, stock = 15
-WHERE id = 7;  //aqui va es un trigger
+WHERE id = 7;
 ```
 
 El administrador selecciona una bicicleta para eliminar.
 
 ```sql
 DELETE FROM bicicletas
-WHERE id = 7;  //aqui va es un trigger
+WHERE id = 7;
 ```
 
 
@@ -109,7 +147,7 @@ END //
 DELIMITER ;
 
 INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad) VALUES
-(5, 5, 3, 4000000.50);	 
+(5, 5, 3, 4000000.50);
 ```
 
 
