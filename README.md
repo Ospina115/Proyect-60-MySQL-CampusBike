@@ -146,6 +146,36 @@ El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono
 electrónico, ciudad).
 
   ```sql
+  DELIMITER //
+  CREATE TRIGGER verificacion_proveedores
+  BEFORE INSERT ON proveedores
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.nombre IS NULL 
+  	OR NEW.contacto IS NULL 
+  	OR NEW.email IS NULL 
+  	OR NEW.telefono IS NULL
+  	OR NEW.ciudad_id IS NULL
+  	THEN
+  	SIGNAL SQLSTATE '45000'
+  	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+  	END IF;
+  END //
+  DELIMITER ;
+  
+  DELIMITER //
+  CREATE TRIGGER numero_proveedores
+  BEFORE INSERT ON proveedores
+  FOR EACH ROW
+  BEGIN
+  	IF CHAR_LENGTH(NEW.telefono) != 10
+  	THEN
+  	SIGNAL SQLSTATE '45000'
+  	SET MESSAGE_TEXT = 'Debes ingresar un numero de telefono valido; ejemplo (3123345678)';
+  	END IF;
+  END //
+  DELIMITER ;
+  
   INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
   VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7);
   ```
