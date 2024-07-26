@@ -1403,6 +1403,6 @@ El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 El procedimiento almacenado devuelve el total de ventas agrupadas por año y mes.
 
 ```sql
-
+ASSS
 ```
 
