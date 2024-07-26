@@ -23,46 +23,8 @@ Joseph Samuel Ospina
 El administrador ingresa los detalles de la bicicleta (modelo, marca, precio, stock).
 
 ```sql
-DELIMITER //
-CREATE TRIGGER insertar_bicicletas
-AFTER INSERT ON bicicletas
-FOR EACH ROW
-BEGIN
-	INSERT INTO bicibletas (modelo, marca, precio, stock) VALUES
-	(NEW.modelo, NEW.marca, NEW.precio, NEW.stock);
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER verificacion_bicicletas
-BEFORE INSERT ON bicicletas
-FOR EACH ROW
-BEGIN
-	IF NEW.modelo IS NULL 
-	OR NEW.marca IS NULL 
-	OR NEW.precio IS NULL 
-	OR NEW.stock IS NULL
-	THEN
-	SIGNAL SQLSTATE '45000'
-	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
-	END IF;
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER numnegativos_bicicletas
-BEFORE INSERT ON bicicletas
-FOR EACH ROW
-BEGIN
-	IF NEW.precio < 0 THEN
-		SIGNAL SQLSTATE '45000'
-		SET MESSAGE_TEXT = 'El precio no puede ser un numero negativo';
-	END IF;
-END //
-DELIMITER ;
-
 INSERT INTO bicicletas (modelo, marca, precio, stock) VALUES
-(3, 2, 6000000.50, 5);
+(3, 2, 6000000.50, 5);  //aqui va es un trigger
 ```
 
 
@@ -72,14 +34,14 @@ El administrador actualiza la información (precio, stock).
 ```sql
 UPDATE bicicletas 
 SET precio = 8000000.00, stock = 15
-WHERE id = 7;
+WHERE id = 7;  //aqui va es un trigger
 ```
 
 El administrador selecciona una bicicleta para eliminar.
 
 ```sql
 DELETE FROM bicicletas
-WHERE id = 7; 
+WHERE id = 7;  //aqui va es un trigger
 ```
 
 
@@ -91,10 +53,63 @@ WHERE id = 7;
 El vendedor selecciona las bicicletas que el cliente desea comprar y especifica la cantidad.
 
 ```sql
+DELIMITER //
+CREATE TRIGGER agregar_ventas
+BEFORE INSERT ON ventas 
+FOR EACH ROW
+BEGIN 
+	INSERT INTO ventas (fecha, cliente_id)
+	VALUES (NEW.fecha, NEW.cliente_id);
+END
+//
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER verificacion_ventas
+BEFORE INSERT ON ventas
+FOR EACH ROW
+BEGIN 
+    IF NEW.fecha IS NULL 
+    OR NEW.cliente_id IS NULL 
+    THEN 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
+    END IF;
+END //
+DELIMITER ;
+
 INSERT INTO ventas (fecha, cliente_id)values
 ('2005-08-31', 1);
-INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario) VALUES
-(5, 5, 3, 4000000.50);	 //aqui va es un trigger
+
+DELIMITER //
+CREATE TRIGGER agregar_detalles_de_ventas
+BEFORE INSERT ON detalles_de_ventas 
+FOR EACH ROW
+BEGIN 
+	INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
+	VALUES (NEW.venta_id, NEW.bicicleta_id,NEW.cantidad,NEW.precio_unitario);
+END
+//
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER verificacion_detalles_de_ventas
+BEFORE INSERT ON detalles_de_ventas
+FOR EACH ROW
+BEGIN 
+    IF NEW.venta_id IS NULL 
+    OR NEW.bicicleta_id IS NULL 
+    OR NEW.cantidad IS NULL 
+    OR NEW.precio_unitario IS NULL 
+    THEN 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
+    END IF;
+END //
+DELIMITER ;
+
+INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad) VALUES
+(5, 5, 3, 4000000.50);	 
 ```
 
 
@@ -147,7 +162,7 @@ electrónico, ciudad).
 
   ```sql
   INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
-  VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7);
+  VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7); //aqui va es un trigger
   ```
 
 
@@ -523,7 +538,9 @@ uno.
 El usuario selecciona la opción para consultar los clientes con ventas en un rango de fechas.
 
 ```sql
-
+SELECT id, fecha 
+FROM ventas 
+WHERE fecha BETWEEN 'fecha inicial' AND 'fecha final';
 ```
 
 
@@ -531,7 +548,9 @@ El usuario selecciona la opción para consultar los clientes con ventas en un ra
 El usuario ingresa las fechas de inicio y fin del rango.
 
 ```sql
-
+SELECT id, fecha 
+FROM ventas 
+WHERE fecha BETWEEN '2023-03-05' AND '2023-05-25';
 ```
 
 
@@ -540,7 +559,13 @@ El sistema muestra una lista de clientes que han realizado compras dentro del ra
 fechas especificado.
 
   ```sql
-  
+  +----+------------+
+  | id | fecha      |
+  +----+------------+
+  |  3 | 2023-03-05 |
+  |  4 | 2023-04-10 |
+  |  5 | 2023-05-25 |
+  +----+------------+
   ```
 
 
@@ -552,12 +577,6 @@ fechas especificado.
 
 
 ### Caso de Uso 1: Actualización de Inventario de Bicicletas
-
-El vendedor registra una venta de bicicletas.
-
-```sql
-
-```
 
 
 
@@ -583,7 +602,33 @@ El procedimiento almacenado actualiza el stock de cada bicicleta.
 El vendedor registra una nueva venta.
 
 ```sql
+DELIMITER //
+CREATE TRIGGER agregar_ventas
+BEFORE INSERT ON ventas 
+FOR EACH ROW
+BEGIN 
+	INSERT INTO ventas (fecha, cliente_id)
+	VALUES (NEW.fecha, NEW.cliente_id);
+END
+//
+DELIMITER ;
 
+
+DELIMITER //
+CREATE TRIGGER verificacion_ventas
+BEFORE INSERT ON ventas
+FOR EACH ROW
+BEGIN 
+    IF NEW.fecha IS NULL 
+    OR NEW.cliente_id IS NULL 
+    THEN 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
+    END IF;
+END //
+DELIMITER ;
+
+INSERT INTO ventas (fecha, cliente_id)
+VALUES ('2024-07-26', 1); 
 ```
 
 
@@ -591,15 +636,65 @@ El vendedor registra una nueva venta.
 El sistema llama a un procedimiento almacenado para registrar la venta y sus detalles.
 
 ```sql
+INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad) VALUES
+(5, 5, 3, 4000000.50);
 
-```
+INSERT INTO ventas (fecha, cliente_id)values
+('2005-08-31', 1);
+
+//--------- TRIGGER YA EXISTENTES ---------------
+
+DELIMITER //
+CREATE TRIGGER agregar_ventas
+BEFORE INSERT ON ventas 
+FOR EACH ROW
+BEGIN 
+	INSERT INTO ventas (fecha, cliente_id)
+	VALUES (NEW.fecha, NEW.cliente_id);
+END
+//
+DELIMITER ;
 
 
+DELIMITER //
+CREATE TRIGGER verificacion_ventas
+BEFORE INSERT ON ventas
+FOR EACH ROW
+BEGIN 
+    IF NEW.fecha IS NULL 
+    OR NEW.cliente_id IS NULL 
+    THEN 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
+    END IF;
+END //
+DELIMITER ;
 
-El procedimiento almacenado inserta la venta y sus detalles en las tablas correspondientes.
+DELIMITER //
+CREATE TRIGGER agregar_detalles_de_ventas
+BEFORE INSERT ON detalles_de_ventas 
+FOR EACH ROW
+BEGIN 
+	INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
+	VALUES (NEW.venta_id, NEW.bicicleta_id,NEW.cantidad,NEW.precio_unitario);
+END
+//
+DELIMITER ;
 
-```sql
 
+DELIMITER //
+CREATE TRIGGER verificacion_detalles_de_ventas
+BEFORE INSERT ON detalles_de_ventas
+FOR EACH ROW
+BEGIN 
+    IF NEW.venta_id IS NULL 
+    OR NEW.bicicleta_id IS NULL 
+    OR NEW.cantidad IS NULL 
+    OR NEW.precio_unitario IS NULL 
+    THEN 
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
+    END IF;
+END //
+DELIMITER ;
 ```
 
 
@@ -609,7 +704,9 @@ El procedimiento almacenado inserta la venta y sus detalles en las tablas corres
 El administrador selecciona un cliente para generar un reporte de ventas.
 
 ```sql
-
+SELECT id, fecha, cliente_id
+FROM ventas
+WHERE cliente_id = 1;
 ```
 
 
@@ -617,7 +714,11 @@ El administrador selecciona un cliente para generar un reporte de ventas.
 El sistema llama a un procedimiento almacenado para generar el reporte.
 
 ```sql
-
++----+------------+------------+
+| id | fecha      | cliente_id |
++----+------------+------------+
+|  1 | 2023-01-15 |          1 |
++----+------------+------------+
 ```
 
 
@@ -636,7 +737,8 @@ cliente.
 El administrador registra una nueva compra.
 
 ```sql
-
+INSERT INTO compras (fecha, proveedor_id, total)
+VALUES ('2024-07-26', 1, 20000.00);
 ```
 
 
@@ -644,7 +746,10 @@ El administrador registra una nueva compra.
 El sistema llama a un procedimiento almacenado para registrar la compra y sus detalles.
 
 ```sql
-
+INSERT INTO compras (fecha, proveedor_id, total)
+VALUES ('2024-07-26', 1, 20000.00);
+INSERT INTO detalles_de_compras (compra_id, repuesto_id, cantidad, precio_unitario)
+VALUES (6, 1,4, 5000.00);
 ```
 
 
