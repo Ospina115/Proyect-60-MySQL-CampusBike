@@ -199,8 +199,38 @@ El administrador ingresa los detalles del proveedor (nombre, contacto, teléfono
 electrónico, ciudad).
 
   ```sql
-  INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
-  VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7); //aqui va es un trigger
+    DELIMITER //
+    CREATE TRIGGER verificacion_proveedores
+    BEFORE INSERT ON proveedores
+    FOR EACH ROW
+    BEGIN
+    	IF NEW.nombre IS NULL 
+    	OR NEW.contacto IS NULL 
+    	OR NEW.email IS NULL 
+    	OR NEW.telefono IS NULL
+    	OR NEW.ciudad_id IS NULL
+    	THEN
+    	SIGNAL SQLSTATE '45000'
+    	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+    	END IF;
+    END //
+    DELIMITER ;
+    
+    DELIMITER //
+    CREATE TRIGGER numero_proveedores
+    BEFORE INSERT ON proveedores
+    FOR EACH ROW
+    BEGIN
+    	IF CHAR_LENGTH(NEW.telefono) != 10
+    	THEN
+    	SIGNAL SQLSTATE '45000'
+    	SET MESSAGE_TEXT = 'Debes ingresar un numero de telefono valido; ejemplo (3123345678)';
+    	END IF;
+    END //
+    DELIMITER ;
+    
+    INSERT INTO proveedores (nombre, contacto, email, telefono, ciudad_id) 
+    VALUES ('JH', 3129837777, 'quebendicion@compartan.com',7777 ,7);
   ```
 
 
@@ -209,8 +239,50 @@ El administrador ingresa los detalles del repuesto (nombre, descripción, precio
 proveedor).
 
   ```sql
+    DELIMITER //
+    CREATE TRIGGER verificacion_repuestos
+    BEFORE INSERT ON repuestos
+    FOR EACH ROW
+    BEGIN
+    	IF NEW.nombre IS NULL 
+    	OR NEW.descripcion IS NULL 
+    	OR NEW.precio IS NULL 
+    	OR NEW.stock IS NULL
+    	OR NEW.modelo IS NULL
+    	OR NEW.marca IS NULL
+    	THEN
+    	SIGNAL SQLSTATE '45000'
+    	SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+    	END IF;
+    END //
+    DELIMITER ;
+  
+    DELIMITER //
+    CREATE TRIGGER numnegativos_repuestos
+    BEFORE INSERT ON repuestos
+    FOR EACH ROW
+    BEGIN
+    	IF NEW.precio < 0 THEN
+    		SIGNAL SQLSTATE '45000'
+    		SET MESSAGE_TEXT = 'El precio no puede ser un numero negativo';
+    	END IF;
+    END //
+    DELIMITER ;
+  
+    DELIMITER //
+    CREATE TRIGGER numnegativos_stock
+    BEFORE INSERT ON repuestos
+    FOR EACH ROW
+    BEGIN
+    	IF NEW.stock < 1 THEN
+    		SIGNAL SQLSTATE '45000'
+    		SET MESSAGE_TEXT = 'El precio no puede ser menor a uno';
+    	END IF;
+    END //
+    DELIMITER ;
+    
   INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
-  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 ); //aqui va es un trigger
+  VALUES ('murillo', 'simplemente murrilo detonando a jh', 1000.00, 20, 6, 5, 2 );
   ```
 
 
@@ -220,7 +292,7 @@ El administrador actualiza la información del proveedor.
 ```sql
 UPDATE proveedores 
 SET nombre = 'la liendra'
-WHERE id = 6; //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -239,7 +311,7 @@ El administrador selecciona un proveedor para eliminar.
 
 ```sql
 DELETE FROM proveedores 
-WHERE id = 6;	 //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -248,7 +320,7 @@ El administrador selecciona un repuesto para eliminar.
 
 ```sql
 DELETE FROM repuestos 
-WHERE id = 6;  //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
