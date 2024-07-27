@@ -168,7 +168,6 @@ El sistema guarda la venta y actualiza el inventario de bicicletas.
 
 ```sql
 DELIMITER //
-
 CREATE TRIGGER actualizar_stock_bicicleta
 AFTER INSERT ON detalles_de_ventas
 FOR EACH ROW
@@ -176,12 +175,9 @@ BEGIN
     UPDATE bicicletas
     SET stock = stock - NEW.cantidad
     WHERE id = NEW.bicicleta_id;
-END;
-
-//
+END; //
 
 DELIMITER ;
-
 BEGIN;
 INSERT INTO ventas (fecha, cliente_id)
 VALUES ('2005-08-31', 1);
@@ -276,7 +272,7 @@ proveedor).
     BEGIN
     	IF NEW.stock < 1 THEN
     		SIGNAL SQLSTATE '45000'
-    		SET MESSAGE_TEXT = 'El precio no puede ser menor a uno';
+    		SET MESSAGE_TEXT = 'El stock no puede ser menor a uno';
     	END IF;
     END //
     DELIMITER ;
@@ -302,7 +298,7 @@ El administrador selecciona un repuesto existente para actualizar.
 ```sql
 UPDATE repuestos 
 SET nombre = 'reykon', descripcion = 'pelea epica por luisa castro'
-WHERE id = 6;  //aqui va es un trigger
+WHERE id = 6;
 ```
 
 
@@ -384,8 +380,35 @@ precio).
 El administrador selecciona la opción para registrar una nueva compra.
 
 ```sql
+DELIMITER //
+CREATE TRIGGER verificacion_compras
+BEFORE INSERT ON compras
+FOR EACH ROW
+BEGIN
+ IF NEW.fecha IS NULL 
+ OR NEW.proveedor_id IS NULL 
+ OR NEW.total IS NULL 
+ THEN
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+ END IF;
+END //
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER numnegativos_compras
+BEFORE INSERT ON compras
+FOR EACH ROW
+BEGIN
+	IF NEW.total < 1 THEN
+		SIGNAL SQLSTATE '45000'
+		SET MESSAGE_TEXT = 'El total no puede ser menor a 1';
+	END IF;
+END //
+DELIMITER ;
+
 INSERT INTO compras (fecha, proveedor_id, total)
-VALUES ('2024-07-25', 1, 10000); //aqui va es un trigger
+VALUES ('2024-07-25', 1, 10000);
 ```
 
 
@@ -403,33 +426,60 @@ WHERE id = 6;
 El administrador ingresa los detalles de la compra (fecha, total).
 
 ```sql
-INSERT INTO () //aqui va es un trigger
+DELIMITER //
+CREATE TRIGGER verificacion_detallescompra
+BEFORE INSERT ON detalles_de_compras
+FOR EACH ROW
+BEGIN
+ IF NEW.compra_id IS NULL 
+ OR NEW.cantidad IS NULL 
+ OR NEW.precio_unitario IS NULL
+ OR NEW.fecha IS NULL
+ OR NEW.total IS NULL
+ THEN
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+ END IF;
+END //
+DELIMITER ;
+
+  DELIMITER //
+  CREATE TRIGGER numnegativos_stock
+  BEFORE INSERT ON detalles_de_compras
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.cantidad < 1 THEN
+  		SIGNAL SQLSTATE '45000'
+  		SET MESSAGE_TEXT = 'La cantidad no puede ser menor a uno';
+  	END IF;
+  END //
+  DELIMITER ;
+  
+    DELIMITER //
+  CREATE TRIGGER numnegativos_precio
+  BEFORE INSERT ON detalles_de_compras
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.precio_unitario < 1 THEN
+  		SIGNAL SQLSTATE '45000'
+  		SET MESSAGE_TEXT = 'El precio unitario no puede ser menor a uno';
+  	END IF;
+  END //
+  DELIMITER ;
+
+INSERT INTO detalles_de_compras (compra_id, cantidad, precio_unitario, fecha, total)
+VALUES (1, 10, 210000.75, 2023-10-26, 100000)
 ```
 
 
-
-El sistema guarda la compra y genera un identificador único.
-
-```sql
-
-```
 
 El administrador selecciona los repuestos comprados y especifica la cantidad y el precio
 unitario.
 
 ```sql
-
+INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
+VALUES ('Cadena', 'Cadena para bicicleta de montaña', 210000.75, 20, 1, 1, 1)
 ```
-
-
-
-El sistema guarda los detalles de la compra y actualiza el stock de los repuestos comprados.
-
-```sql
-
-```
-
-
 
 
 
