@@ -1161,7 +1161,10 @@ El procedimiento almacenado calcula el total con el descuento aplicado y registr
 El administrador selecciona la opción para calcular el total de ventas mensuales.
 
 ```sql
-
+SELECT SUM(dv.cantidad * dv.precio_unitario) AS Total_ventas
+FROM ventas AS v
+JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+WHERE v.fecha BETWEEN 'fecha inicial' AND 'fecha final';
 ```
 
 
@@ -1169,7 +1172,10 @@ El administrador selecciona la opción para calcular el total de ventas mensuale
 El administrador ingresa el mes y el año.
 
 ```sql
-
+SELECT SUM(dv.cantidad * dv.precio_unitario) AS Total_ventas
+FROM ventas AS v
+JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+WHERE v.fecha BETWEEN '2023-05-01' AND '2023-05-31';
 ```
 
 
@@ -1177,7 +1183,18 @@ El administrador ingresa el mes y el año.
 El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE promediodeventastotal()
+BEGIN 
+    SELECT SUM(dv.cantidad * dv.precio_unitario) AS Total_ventas
+    FROM ventas AS v
+    JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id;
+END //
+
+DELIMITER ;
+
+CALL promediodeventastotal();
 ```
 
 
@@ -1185,25 +1202,43 @@ El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 El procedimiento almacenado devuelve el total de ventas del mes especificado.
 
 ```sql
+ventas realizadas en el mes de mayo (05)
+DELIMITER //
 
+CREATE PROCEDURE promediodeventasmes(
+	IN inicio DATE,
+	IN FINAL DATE
+)
+BEGIN 
+	SELECT SUM(dv.cantidad * dv.precio_unitario) AS Total_ventas
+    FROM ventas AS v
+    JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+    WHERE v.fecha BETWEEN inicio AND FINAL;
+END //
+
+DELIMITER ;
+CALL promediodeventasmes('2023-05-01', '2023-05-31');
 ```
 
 
 
 ### Caso de Uso 2: Calcular el Promedio de Ventas por Cliente
 
-El administrador ingresa el ID del cliente.
-
-```sql
-
-```
-
-
-
 El sistema llama a un procedimiento almacenado para calcular el promedio de ventas.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE promediodeventas()
+BEGIN 
+    SELECT AVG(dv.cantidad * dv.precio_unitario) AS 'promedio total de ventas'
+    FROM ventas AS v
+    JOIN detalles_de_ventas AS dv ON v.id = dv. venta_id;
+END //
+
+DELIMITER ;
+
+CALL promediodeventas();
 ```
 
 
@@ -1211,7 +1246,25 @@ El sistema llama a un procedimiento almacenado para calcular el promedio de vent
 El procedimiento almacenado devuelve el promedio de ventas del cliente especificado.
 
 ```sql
+promedio del cliente 1
 
+DELIMITER //
+
+CREATE PROCEDURE promedioventas(
+	IN id_cliente INT
+)
+
+BEGIN 
+    SELECT AVG(dv.cantidad * dv.precio_unitario) AS 'promedio total de ventas'
+    FROM ventas AS v
+    JOIN detalles_de_ventas AS dv ON v.id = dv. venta_id
+    JOIN clientes AS c ON v.cliente_id = c.id
+    WHERE c.id = id_cliente;
+END //
+
+DELIMITER ;
+
+CALL promedioventas(1);
 ```
 
 
@@ -1222,7 +1275,10 @@ El administrador selecciona la opción para contar el número de ventas en un ra
 fechas.
 
   ```sql
-  
+  SELECT COUNT(dv.cantidad) AS 'cantidad de ventas'
+  FROM ventas AS v
+  JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+  WHERE v.fecha BETWEEN 'FECHA INICIO' AND 'FECHA FINAL';
   ```
 
   
@@ -1230,7 +1286,10 @@ fechas.
 El administrador ingresa las fechas de inicio y fin.
 
 ```sql
-
+SELECT COUNT(dv.cantidad) AS 'cantidad de ventas'
+FROM ventas AS v
+JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+WHERE v.fecha BETWEEN '2023-05-01' AND '2023-05-31';
 ```
 
 
@@ -1238,7 +1297,18 @@ El administrador ingresa las fechas de inicio y fin.
 El sistema llama a un procedimiento almacenado para contar las ventas.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE ventastotales()
+
+BEGIN
+	SELECT COUNT(dv.cantidad) AS 'cantidad de ventas'
+	FROM ventas AS v
+	JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id;
+END //
+
+DELIMITER ;
+CALL ventastotales();
 ```
 
 
@@ -1247,6 +1317,23 @@ El procedimiento almacenado devuelve el número de ventas en el rango de fechas
 especificado.
 
   ```sql
+  DELIMITER //
+  
+  CREATE PROCEDURE ventasporrango(
+  	IN fechainicial DATE,
+  	IN fechafinal DATE
+  )
+  
+  BEGIN
+  	SELECT COUNT(dv.cantidad) AS 'cantidad de ventas'
+  	FROM ventas AS v
+  	JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+  	WHERE v.fecha BETWEEN fechainicial AND fechafinal;
+  END //
+  
+  DELIMITER ;
+  CALL ventasporrango('2023-05-01', '2023-05-31');
+  
   
   ```
 
@@ -1258,7 +1345,10 @@ El administrador selecciona la opción para calcular el total de repuestos compr
 proveedor.
 
   ```sql
-  
+  SELECT COUNT(dc.cantidad)
+  FROM compras AS c
+  JOIN detalles_de_compras AS dc ON c.id = dc.compra_id
+  JOIN proveedores AS p ON c.proveedor_id = p.id;
   ```
 
   
@@ -1266,7 +1356,11 @@ proveedor.
 El administrador ingresa el ID del proveedor.
 
 ```sql
-
+SELECT COUNT(dc.cantidad)
+FROM compras AS c
+JOIN detalles_de_compras AS dc ON c.id = dc.compra_id
+JOIN proveedores AS p ON c.proveedor_id = p.id
+WHERE p.id = 1;
 ```
 
 
@@ -1274,7 +1368,19 @@ El administrador ingresa el ID del proveedor.
 El sistema llama a un procedimiento almacenado para calcular el total de repuestos.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE CalcularTotalRepuestos()
+BEGIN
+    SELECT 
+    	SUM(r.precio * r.stock) AS Total_repuestos
+    FROM 
+        repuestos r;
+END //
+
+DELIMITER ;
+
+CALL CalcularTotalRepuestos();
 ```
 
 
@@ -1283,7 +1389,25 @@ El procedimiento almacenado devuelve el total de repuestos comprados al proveedo
 especificado.
 
   ```sql
+  DELIMITER //
   
+  CREATE PROCEDURE TotalRepuestosPorProveedor(
+      IN proveedor_id INT
+  )
+  BEGIN
+      SELECT 
+          SUM(dc.precio_unitario * dc.cantidad) AS Total_repuestos
+      FROM 
+          detalles_de_compras dc
+      JOIN 
+          repuestos r ON dc.repuesto_id = r.id
+      WHERE 
+          r.proveedor_id = proveedor_id;
+  END //
+  
+  DELIMITER ;
+  
+  CALL TotalRepuestosPorProveedor(1);
   ```
 
   
@@ -1293,7 +1417,10 @@ especificado.
 El administrador selecciona la opción para calcular el ingreso total por año.
 
 ```sql
-
+SELECT SUM(dv.cantidad * dv.precio_unitario ) AS 'ingresos anuales'
+	FROM ventas AS v
+	JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+	WHERE v.fecha BETWEEN FECHA INICIAL AND FECHA FINAL;
 ```
 
 
@@ -1301,7 +1428,10 @@ El administrador selecciona la opción para calcular el ingreso total por año.
 El administrador ingresa el año.
 
 ```sql
-
+SELECT SUM(dv.cantidad * dv.precio_unitario ) AS 'ingresos anuales'
+	FROM ventas AS v
+	JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+	WHERE v.fecha BETWEEN '2023-01-01' AND '2023-12-31';
 ```
 
 
@@ -1309,7 +1439,18 @@ El administrador ingresa el año.
 El sistema llama a un procedimiento almacenado para calcular el ingreso total.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE ingresostotales()
+
+BEGIN 
+	SELECT SUM(cantidad * precio_unitario) AS 'ingresos totales'
+	FROM detalles_de_ventas;
+
+END // 
+
+DELIMITER ;
+CALL ingresostotales();
 ```
 
 
@@ -1317,7 +1458,22 @@ El sistema llama a un procedimiento almacenado para calcular el ingreso total.
 El procedimiento almacenado devuelve el ingreso total del año especificado.
 
 ```sql
+DELIMITER //
+CREATE PROCEDURE ingresostotalesaño(
+	IN fechainc DATE,
+    IN fechafin DATE
+)
 
+BEGIN 
+	SELECT SUM(dv.cantidad * dv.precio_unitario ) AS 'ingresos anuales'
+	FROM ventas AS v
+	JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+	WHERE v.fecha BETWEEN fechainc AND fechafin;
+END //
+
+DELIMITER ;
+
+CALL ingresostotalesaño('2023-01-01','2023-12-31');
 ```
 
 
@@ -1327,7 +1483,10 @@ El procedimiento almacenado devuelve el ingreso total del año especificado.
 El administrador selecciona la opción para contar el número de clientes activos en un mes.
 
 ```sql
-
+SELECT c.nombre, v.fecha
+	FROM clientes AS c
+	JOIN ventas AS v ON c.id = v.cliente_id
+	WHERE v.fecha BETWEEN FECHA INICIAL AND FECHA FINAL;
 ```
 
 
@@ -1335,7 +1494,10 @@ El administrador selecciona la opción para contar el número de clientes activo
 El administrador ingresa el mes y el año.
 
 ```sql
-
+SELECT c.nombre, v.fecha
+	FROM clientes AS c
+	JOIN ventas AS v ON c.id = v.cliente_id
+	WHERE v.fecha BETWEEN '2023-05-01' AND '2023-05-31';
 ```
 
 
@@ -1343,7 +1505,18 @@ El administrador ingresa el mes y el año.
 El sistema llama a un procedimiento almacenado para contar los clientes activos.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE clientesactivos()
+
+BEGIN 
+	SELECT nombre
+	FROM clientes;
+END //
+
+DELIMITER ;
+
+CALL clientesactivos();
 ```
 
 
@@ -1352,7 +1525,23 @@ El procedimiento almacenado devuelve el número de clientes que han realizado co
 el mes especificado.
 
   ```sql
+  DELIMITER //
   
+  CREATE PROCEDURE clientemasactivo(
+  	IN mesinial DATE,
+      IN mesfinal DATE
+  )
+  
+  BEGIN 
+  	SELECT c.nombre, v.fecha
+  	FROM clientes AS c
+  	JOIN ventas AS v ON c.id = v.cliente_id
+  	WHERE v.fecha BETWEEN mesinial AND mesfinal;
+  END //
+  
+  DELIMITER ;
+  
+  CALL clientemasactivo('2023-05-01', '2023-05-31' );
   ```
 
   
@@ -1362,7 +1551,10 @@ el mes especificado.
 El administrador selecciona la opción para calcular el promedio de compras por proveedor.
 
 ```sql
-
+SELECT dc.cantidad, p.nombre
+FROM detalles_de_compras AS dc
+JOIN compras AS c ON dc.compra_id = c.id
+JOIN proveedores AS p ON c.proveedor_id = p.id; 
 ```
 
 
@@ -1370,7 +1562,11 @@ El administrador selecciona la opción para calcular el promedio de compras por 
 El administrador ingresa el ID del proveedor.
 
 ```sql
-
+SELECT dc.cantidad, p.nombre
+FROM detalles_de_compras AS dc
+JOIN compras AS c ON dc.compra_id = c.id
+JOIN proveedores AS p ON c.proveedor_id = p.id
+WHERE p.id = 1;
 ```
 
 
@@ -1378,7 +1574,20 @@ El administrador ingresa el ID del proveedor.
 El sistema llama a un procedimiento almacenado para calcular el promedio de compras.
 
 ```sql
+DELIMITER // 
 
+CREATE PROCEDURE promediocompras()
+
+BEGIN 
+	SELECT AVG(dc.cantidad)
+    FROM detalles_de_compras AS dc
+    JOIN compras AS c ON dc.compra_id = c.id
+    JOIN proveedores AS p ON c.proveedor_id = p.id; 
+END //
+
+DELIMITER ;
+
+CALL promediocompras();
 ```
 
 
@@ -1386,7 +1595,23 @@ El sistema llama a un procedimiento almacenado para calcular el promedio de comp
 El procedimiento almacenado devuelve el promedio de compras del proveedor especificado.
 
 ```sql
+DELIMITER // 
 
+CREATE PROCEDURE promediocomprasproveedor(
+	IN id INT
+)
+
+BEGIN 
+	SELECT AVG(dc.cantidad) AS 'promedio del proveedor'
+    FROM detalles_de_compras AS dc
+    JOIN compras AS c ON dc.compra_id = c.id
+    JOIN proveedores AS p ON c.proveedor_id = p.id
+    WHERE p.id = id;
+END //
+
+DELIMITER ;
+
+CALL promediocomprasproveedor(1);
 ```
 
 
@@ -1396,7 +1621,12 @@ El procedimiento almacenado devuelve el promedio de compras del proveedor especi
 El administrador selecciona la opción para calcular el total de ventas por marca.
 
 ```sql
-
+SELECT SUM(dv.cantidad * dv.precio_unitario) AS total_ventas,
+	m.nombre AS marca
+FROM detalles_de_ventas AS dv
+JOIN bicicletas AS b ON dv.bicicleta_id = b.id
+JOIN marca AS m ON m.id = b.marca
+GROUP BY m.nombre;
 ```
 
 
@@ -1404,7 +1634,22 @@ El administrador selecciona la opción para calcular el total de ventas por marc
 El sistema llama a un procedimiento almacenado para calcular el total de ventas por marca.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE totalventasmarca()
+
+BEGIN
+	SELECT SUM(dv.cantidad * dv.precio_unitario) AS total_ventas,
+        m.nombre AS marca
+    FROM detalles_de_ventas AS dv
+    JOIN bicicletas AS b ON dv.bicicleta_id = b.id
+    JOIN marca AS m ON m.id = b.marca
+    GROUP BY m.nombre;
+END //
+
+DELIMITER ;
+
+CALL totalventasmarca();
 ```
 
 
@@ -1412,7 +1657,20 @@ El sistema llama a un procedimiento almacenado para calcular el total de ventas 
 El procedimiento almacenado devuelve el total de ventas agrupadas por marca.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE totalventasagrupadasmarca()
+
+BEGIN
+	SELECT SUM(dv.cantidad * dv.precio_unitario) AS total_ventas
+    FROM detalles_de_ventas AS dv
+    JOIN bicicletas AS b ON dv.bicicleta_id = b.id
+    JOIN marca AS m ON m.id = b.marca;
+END //
+
+DELIMITER ;
+
+CALL totalventasagrupadasmarca();
 ```
 
 
@@ -1422,7 +1680,12 @@ El procedimiento almacenado devuelve el total de ventas agrupadas por marca.
 El administrador selecciona la opción para calcular el promedio de precios por marca.
 
 ```sql
-
+SELECT AVG(dv.cantidad * dv.precio_unitario) AS total_ventas,
+    m.nombre AS marca
+FROM detalles_de_ventas AS dv
+JOIN bicicletas AS b ON dv.bicicleta_id = b.id
+JOIN marca AS m ON m.id = b.marca
+GROUP BY m.nombre;
 ```
 
 
@@ -1430,7 +1693,22 @@ El administrador selecciona la opción para calcular el promedio de precios por 
 El sistema llama a un procedimiento almacenado para calcular el promedio de precios.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE promedioventasmarca()
+
+BEGIN
+	SELECT AVG(dv.cantidad * dv.precio_unitario) AS total_ventas,
+        m.nombre AS marca
+    FROM detalles_de_ventas AS dv
+    JOIN bicicletas AS b ON dv.bicicleta_id = b.id
+    JOIN marca AS m ON m.id = b.marca
+    GROUP BY m.nombre;
+END //
+
+DELIMITER ;
+
+CALL promedioventasmarca();
 ```
 
 
@@ -1438,7 +1716,20 @@ El sistema llama a un procedimiento almacenado para calcular el promedio de prec
 El procedimiento almacenado devuelve el promedio de precios agrupadas por marca.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE promedioventasagrupadasmarca()
+
+BEGIN
+	SELECT SUM(dv.cantidad * dv.precio_unitario) AS total_ventas
+    FROM detalles_de_ventas AS dv
+    JOIN bicicletas AS b ON dv.bicicleta_id = b.id
+    JOIN marca AS m ON m.id = b.marca;
+END //
+
+DELIMITER ;
+
+CALL promedioventasagrupadasmarca();
 ```
 
 
@@ -1448,7 +1739,10 @@ El procedimiento almacenado devuelve el promedio de precios agrupadas por marca.
 El administrador selecciona la opción para contar el número de repuestos por proveedor.
 
 ```sql
-
+SELECT dc.cantidad, p.nombre
+FROM detalles_de_compras AS dc
+JOIN REPUESTOS as r ON dc.repuesto_id = r.id
+JOIN proveedores AS p ON r.proveedor_id = p.id;
 ```
 
 
@@ -1456,7 +1750,17 @@ El administrador selecciona la opción para contar el número de repuestos por p
 El sistema llama a un procedimiento almacenado para contar los repuestos.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE contarrepuestos()
+
+BEGIN 
+ SELECT SUM(cantidad)
+ FROM detalles_de_compras;
+END //
+
+DELIMITER ;
+CALL contarrepuestos();
 ```
 
 
@@ -1465,7 +1769,19 @@ El procedimiento almacenado devuelve el número de repuestos suministrados por c
 proveedor.
 
   ```sql
+  DELIMITER //
   
+  CREATE PROCEDURE repuestosdeproveedor()
+  
+  BEGIN 
+   SELECT dc.cantidad, p.nombre
+      FROM detalles_de_compras AS dc
+      JOIN REPUESTOS as r ON dc.repuesto_id = r.id
+      JOIN proveedores AS p ON r.proveedor_id = p.id;
+  END //
+  
+  DELIMITER ;
+  CALL repuestosdeproveedor();
   ```
 
   
@@ -1475,7 +1791,12 @@ proveedor.
 El administrador selecciona la opción para calcular el total de ingresos por cliente.
 
 ```sql
-
+SELECT SUM(dv.cantidad * dv.precio_unitario) AS 'ingresos por cliente',
+	c.nombre AS nombre_cliente
+	FROM detalles_de_ventas AS dv
+	JOIN ventas AS v ON dv.venta_id = v.id
+	JOIN clientes AS c ON c.id = v.cliente_id
+	GROUP BY c.nombre;
 ```
 
 
@@ -1483,7 +1804,8 @@ El administrador selecciona la opción para calcular el total de ingresos por cl
 El sistema llama a un procedimiento almacenado para calcular el total de ingresos.
 
 ```sql
-
+procedimiento agregado anteriormente
+CALL ingresostotales();
 ```
 
 
@@ -1491,7 +1813,22 @@ El sistema llama a un procedimiento almacenado para calcular el total de ingreso
 El procedimiento almacenado devuelve el total de ingresos generados por cada cliente.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE totalingresoscliente()
+
+BEGIN
+    SELECT SUM(dv.cantidad * dv.precio_unitario) AS 'ingresos por cliente',
+        c.nombre AS nombre_cliente
+        FROM detalles_de_ventas AS dv
+        JOIN ventas AS v ON dv.venta_id = v.id
+        JOIN clientes AS c ON c.id = v.cliente_id
+        GROUP BY c.nombre;
+END //
+
+DELIMITER ;
+
+CALL totalingresoscliente();
 ```
 
 
@@ -1501,7 +1838,9 @@ El procedimiento almacenado devuelve el total de ingresos generados por cada cli
 El administrador selecciona la opción para calcular el promedio de compras mensuales.
 
 ```sql
-
+SELECT ROUND(AVG(total)), fecha
+FROM compras
+GROUP BY fecha;
 ```
 
 
@@ -1510,7 +1849,19 @@ El sistema llama a un procedimiento almacenado para calcular el promedio de comp
 mensuales.
 
   ```sql
+  DELIMITER //
   
+  CREATE PROCEDURE promediocomprasmensual()
+  
+  BEGIN
+      SELECT ROUND(AVG(total)) AS Promedio_compras, fecha
+      FROM compras
+      GROUP BY fecha;
+  END //
+  
+  DELIMITER ;
+  
+  CALL promediocomprasmensual();
   ```
 
   
@@ -1518,7 +1869,17 @@ mensuales.
 El procedimiento almacenado devuelve el promedio de compras realizadas mensualmente.
 
 ```sql
+CALL promediocomprasmensual();
 
++-------------------+------------+
+| Promedio_compras  | fecha      |
++-------------------+------------+
+|           2100000 | 2023-01-10 |
+|           3150000 | 2023-02-15 |
+|           4230000 | 2023-03-20 |
+|           1560000 | 2023-04-25 |
+|           2330000 | 2023-05-30 |
++-------------------+------------+
 ```
 
 
@@ -1528,7 +1889,19 @@ El procedimiento almacenado devuelve el promedio de compras realizadas mensualme
 El administrador selecciona la opción para calcular el total de ventas por día de la semana.
 
 ```sql
-
+SELECT 
+        DATE_FORMAT(v.fecha, '%W') AS dia_semana,
+        ROUND(SUM(dv.cantidad * dv.precio_unitario)) AS total_ventas
+    FROM 
+        ventas AS v
+    JOIN 
+        detalles_de_ventas AS dv ON v.id = dv.venta_id
+    JOIN 
+        bicicletas AS b ON dv.bicicleta_id = b.id
+    GROUP BY 
+        dia_semana
+    ORDER BY 
+        FIELD(dia_semana, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
 ```
 
 
@@ -1536,7 +1909,7 @@ El administrador selecciona la opción para calcular el total de ventas por día
 El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
 ```sql
-
+CALL ingresostotales();
 ```
 
 
@@ -1544,7 +1917,29 @@ El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 El procedimiento almacenado devuelve el total de ventas agrupadas por día de la semana.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE ventassemanales()
+
+BEGIN
+    SELECT 
+        DATE_FORMAT(v.fecha, '%W') AS dia_semana,
+        ROUND(SUM(dv.cantidad * dv.precio_unitario)) AS total_ventas
+    FROM 
+        ventas AS v
+    JOIN 
+        detalles_de_ventas AS dv ON v.id = dv.venta_id
+    JOIN 
+        bicicletas AS b ON dv.bicicleta_id = b.id
+    GROUP BY 
+        dia_semana
+    ORDER BY 
+        FIELD(dia_semana, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+END //
+
+DELIMITER ;
+
+CALL ventassemanales();
 ```
 
 
@@ -1555,7 +1950,10 @@ El administrador selecciona la opción para contar el número de ventas por cate
 bicicleta.
 
   ```sql
-  
+  SELECT m.nombre, dv.cantidad
+  FROM modelo AS m
+  JOIN bicicletas AS b ON m.id = b.modelo
+  JOIN detalles_de_ventas AS dv ON b.id = dv.bicicleta_id;
   ```
 
   
@@ -1563,7 +1961,18 @@ bicicleta.
 El sistema llama a un procedimiento almacenado para contar las ventas.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE contarventas()
+
+BEGIN
+    SELECT SUM(cantidad) AS 'contar ventas'
+	FROM detalles_de_ventas;
+END //
+
+DELIMITER ;
+
+CALL contarventas();
 ```
 
 
@@ -1571,25 +1980,41 @@ El sistema llama a un procedimiento almacenado para contar las ventas.
 El procedimiento almacenado devuelve el número de ventas por categoría de bicicleta.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE ventasmodelo()
+
+BEGIN
+    SELECT m.nombre, dv.cantidad
+    FROM modelo AS m
+    JOIN bicicletas AS b ON m.id = b.modelo
+    JOIN detalles_de_ventas AS dv ON b.id = dv.bicicleta_id;
+END //
+
+DELIMITER ;
+
+CALL ventasmodelo();
 ```
 
 
 
 ### Caso de Uso 15: Calcular el Total de Ventas por Año y Mes
 
-El administrador selecciona la opción para calcular el total de ventas por año y mes.
-
-```sql
-
-```
-
-
-
 El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE ventastotalesbicis()
+
+BEGIN 
+	SELECT SUM(cantidad * precio_unitario) AS 'ventas totales'
+	FROM detalles_de_ventas;
+
+END // 
+
+DELIMITER ;
+CALL ventastotalesbicis();
 ```
 
 
@@ -1597,6 +2022,21 @@ El sistema llama a un procedimiento almacenado para calcular el total de ventas.
 El procedimiento almacenado devuelve el total de ventas agrupadas por año y mes.
 
 ```sql
-ASSS
+DELIMITER //
+CREATE PROCEDURE ventastotalesaño(
+	IN fechainc DATE,
+    IN fechafin DATE
+)
+
+BEGIN 
+	SELECT SUM(dv.cantidad * dv.precio_unitario ) AS 'ventas anuales'
+	FROM ventas AS v
+	JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id
+	WHERE v.fecha BETWEEN fechainc AND fechafin;
+END //
+
+DELIMITER ;
+
+CALL ventastotalesaño('2023-01-01','2023-12-31');
 ```
 
