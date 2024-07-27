@@ -477,6 +477,40 @@ El administrador selecciona los repuestos comprados y especifica la cantidad y e
 unitario.
 
 ```sql
+DELIMITER //
+CREATE TRIGGER verificacion_repuestos
+BEFORE INSERT ON repuestos
+FOR EACH ROW
+BEGIN
+ IF NEW.nombre IS NULL 
+ OR NEW.descripcion IS NULL 
+ OR NEW.precio IS NULL
+ OR NEW.stock IS NULL
+ OR NEW.proveedor_id IS NULL
+ OR NEW.modelo IS NULL
+ OR NEW.marca IS NULL
+ THEN
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'Todos los campos deben ser ingresados';
+ END IF;
+END //
+DELIMITER ;
+
+  DELIMITER //
+  CREATE TRIGGER numnegativos_repuestos
+  BEFORE INSERT ON repuestos
+  FOR EACH ROW
+  BEGIN
+  	IF NEW.stock < 0 
+  	OR NEW.Precio < 1
+  	THEN
+  		SIGNAL SQLSTATE '45000'
+  		SET MESSAGE_TEXT = 'un valor ingresado no es valido';
+  	END IF;
+  END //
+  DELIMITER ;
+
+
 INSERT INTO repuestos (nombre, descripcion, precio, stock, proveedor_id, modelo, marca)
 VALUES ('Cadena', 'Cadena para bicicleta de montaña', 210000.75, 20, 1, 1, 1)
 ```
