@@ -526,7 +526,13 @@ VALUES ('Cadena', 'Cadena para bicicleta de montaña', 210000.75, 20, 1, 1, 1)
 El usuario selecciona la opción para consultar las bicicletas más vendidas por marca.
 
 ```sql
-
+SELECT m.nombre AS marca, mo.nombre AS bicicleta, SUM(dv.cantidad) AS cantidad_vendida
+FROM detalles_de_ventas dv
+  INNER JOIN bicicletas b ON dv.bicicleta_id = b.id
+  INNER JOIN modelo mo ON b.modelo = mo.id
+  INNER JOIN marca m ON b.marca = m.id
+GROUP BY m.nombre, mo.nombre
+ORDER BY cantidad_vendida DESC;
 ```
 
 
@@ -534,7 +540,19 @@ El usuario selecciona la opción para consultar las bicicletas más vendidas por
 El sistema muestra una lista de marcas y el modelo de bicicleta más vendido para cada marca.
 
 ```sql
-
++-------------+---------------+------------------+
+| marca       | bicicleta     | cantidad_vendida |
++-------------+---------------+------------------+
+| Mongoose    | BMX Pro       | 5                |
++-------------+---------------+------------------+
+| Specialized | Road Elite    | 3                |
++-------------+---------------+------------------+
+| Giant       | Mountain 1000 | 2                |
++-------------+---------------+------------------+
+| Scott       | Speedster 200 | 1                |
++-------------+---------------+------------------+
+| Trek        | Hybrid 300    | 1                |
++-------------+---------------+------------------+
 ```
 
 
@@ -545,18 +563,16 @@ El administrador selecciona la opción para consultar los clientes con mayor gas
 específico.
 
   ```sql
-  
+  SELECT c.nombre AS cliente, 
+  SUM(dv.precio_unitario * dv.cantidad) AS total_gastado
+  FROM clientes c
+    INNER JOIN ventas v ON c.id = v.cliente_id
+    INNER JOIN detalles_de_ventas dv ON v.id = dv.venta_id
+  GROUP BY c.nombre
+  ORDER BY total_gastado DESC;
   ```
 
   
-
-El administrador ingresa el año deseado.
-
-```sql
-
-```
-
-
 
 El sistema muestra una lista de los clientes que han gastado más en ese año, ordenados por
 total gastado.
