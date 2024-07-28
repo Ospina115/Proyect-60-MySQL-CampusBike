@@ -578,7 +578,15 @@ El sistema muestra una lista de los clientes que han gastado más en ese año, o
 total gastado.
 
 ```sql
-
++---------------+---------------+
+| cliente       | total_gastado |
++---------------+---------------+
+| Luis Martínez |   12000000.00 |
+| Juan Pérez    |   10000001.00 |
+| Carlos Gómez  |    3800001.00 |
+| Ana García    |    3500000.75 |
+| María López   |    2800000.25 |
++---------------+---------------+
 ```
 
 
@@ -604,7 +612,11 @@ El sistema muestra una lista de proveedores ordenados por el número de compras 
 en el último mes.
 
   ```sql
-  
+  +--------+------------------+
+  | nombre | cantidad_compras |
+  +--------+------------------+
+  | Giant  |                5 |
+  +--------+------------------+
   ```
 
   
@@ -627,7 +639,15 @@ El sistema muestra una lista de repuestos ordenados por la cantidad vendida, de 
 mayor.
 
   ```sql
-  
+  +----------+------------------+
+  | nombre   | cantidad_vendida |
+  +----------+------------------+
+  | Cadena   |               10 |
+  | Llanta   |               10 |
+  | Asiento  |               20 |
+  | Pedal    |               20 |
+  | Manubrio |               25 |
+  +----------+------------------+
   ```
 
   
@@ -651,7 +671,15 @@ ORDER BY cantidad_ventas DESC;
 El sistema muestra una lista de ciudades ordenadas por la cantidad de ventas realizadas.
 
 ```sql
-
++--------------+-----------------+
+| nombre       | cantidad_ventas |
++--------------+-----------------+
+| Bogotá       |               1 |
+| Medellín     |               1 |
+| Cali         |               1 |
+| Barranquilla |               1 |
+| Cartagena    |               1 |
++--------------+-----------------+
 ```
 
 
@@ -811,14 +839,18 @@ bicicletas vendidas.
 
   ```sql
   DELIMITER //
-  CREATE PROCEDURE actualizar_inventario_bicicletas_vendidas()
+  CREATE PROCEDURE actualizar_inventario_bicicletas_vendidas(
+  	IN id_bici INT,
+      IN n_stock INT
+  )
   BEGIN
-      UPDATE bicicletas b
-      JOIN detalles_de_ventas dv ON b.id = dv.bicicleta_id
-      SET b.stock = b.stock - dv.cantidad
-      WHERE dv.venta_id IN (SELECT id FROM ventas);
-  END//
+  	UPDATE bicicletas 
+      SET stock = n_stock
+      WHERE id = id_bici;
+  END //
   DELIMITER ;
+  
+  CALL actualizar_inventario_bicicletas_vendidas(1,2);
   ```
 
   
@@ -826,7 +858,7 @@ bicicletas vendidas.
 El procedimiento almacenado actualiza el stock de cada bicicleta.
 
 ```sql
-CALL actualizar_inventario_bicicletas_vendidas();
+CALL actualizar_inventario_bicicletas_vendidas(1,2);
 ```
 
 
@@ -948,6 +980,19 @@ WHERE cliente_id = 1;
 El sistema llama a un procedimiento almacenado para generar el reporte.
 
 ```sql
+DELIMITER //
+CREATE PROCEDURE generarreporte()
+BEGIN
+    SELECT id, fecha, cliente_id
+    FROM ventas
+    WHERE cliente_id = 1;
+END //
+
+DELIMITER ;
+
+CALL generarreporte();   
+
+
 +----+------------+------------+
 | id | fecha      | cliente_id |
 +----+------------+------------+
@@ -961,7 +1006,19 @@ El procedimiento almacenado obtiene las ventas y los detalles de las ventas real
 cliente.
 
   ```sql
+  DELIMITER //
   
+  CREATE PROCEDURE detallescliente()
+  BEGIN 
+  	SELECT c.nombre AS "nombre del cliente", v.id AS "id de la venta",  v.fecha AS "fecha de venta", dv.cantidad, dv.precio_unitario
+  		FROM clientes AS c
+  		JOIN ventas AS v ON c.id = v.cliente_id
+  		JOIN detalles_de_ventas AS dv ON v.id = dv.venta_id;
+  END //
+  
+  DELIMITER ;
+  
+  CALL detallescliente();
   ```
 
   
@@ -980,10 +1037,28 @@ VALUES ('2024-07-26', 1, 20000.00);
 El sistema llama a un procedimiento almacenado para registrar la compra y sus detalles.
 
 ```sql
-INSERT INTO compras (fecha, proveedor_id, total)
-VALUES ('2024-07-26', 1, 20000.00);
-INSERT INTO detalles_de_compras (compra_id, repuesto_id, cantidad, precio_unitario)
-VALUES (6, 1,4, 5000.00);
+DELIMITER //
+CREATE PROCEDURE aggcompraydetalles(
+	IN nfecha DATE,
+    IN nproveedor_id INT,
+    IN ntotal DECIMAL(10, 2),
+    IN ncompra_id INT,
+    IN nrepuesto_id INT, 
+    IN ncantidad INT,
+    IN npreciounitario DECIMAL(10,2)
+)
+BEGIN 
+	INSERT INTO compras (fecha, proveedor_id, total) 
+	VALUES (nfecha, nproveedor_id, ntotal);
+	
+	INSERT INTO  detalles_de_compras (compra_id, repuesto_id, cantidad, precio_unitario)
+	VALUES (ncompra_id, nrepuesto_id, ncantidad, npreciounitario);
+
+END //
+
+DELIMITER ;
+
+CALL aggcompraydetalles('2024-07-26', 1, 20000.00, 6, 1,4, 5000.00);
 ```
 
 
@@ -992,7 +1067,31 @@ El procedimiento almacenado inserta la compra y sus detalles en las tablas corre
 y actualiza el stock de repuestos.
 
   ```sql
+  DELIMITER //
+  CREATE PROCEDURE aggcompraydetalles(
+  	IN nfecha DATE,
+      IN nproveedor_id INT,
+      IN ntotal DECIMAL(10, 2),
+      IN ncompra_id INT,
+      IN nrepuesto_id INT, 
+      IN ncantidad INT,
+      IN npreciounitario DECIMAL(10,2)
+  )
+  BEGIN 
+  	INSERT INTO compras (fecha, proveedor_id, total) 
+  	VALUES (nfecha, nproveedor_id, ntotal);
+  	
+  	INSERT INTO  detalles_de_compras (compra_id, repuesto_id, cantidad, precio_unitario)
+  	VALUES (ncompra_id, nrepuesto_id, ncantidad, npreciounitario);
+  	
+  	UPDATE repuestos
+      SET stock = stock - ncantidad
+      WHERE id = nrepuesto_id;
+  END //
   
+  DELIMITER ;
+  
+  CALL aggcompraydetalles('2024-07-26', 1, 20000.00, 6, 1,4, 5000.00);
   ```
 
   
