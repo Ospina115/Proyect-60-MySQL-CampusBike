@@ -589,7 +589,13 @@ El administrador selecciona la opción para consultar los proveedores con más c
 último mes.
 
   ```sql
-  
+  SELECT p.nombre, 
+    COUNT(c.id) AS cantidad_compras
+  FROM proveedores p
+    JOIN compras c ON p.id = c.proveedor_id
+  WHERE c.fecha >= DATE_SUB(CURRENT_DATE, INTERVAL 1 MONTH)
+  GROUP BY p.nombre
+  ORDER BY cantidad_compras DESC;
   ```
 
   
@@ -608,7 +614,11 @@ en el último mes.
 El administrador selecciona la opción para consultar los repuestos con menor rotación.
 
 ```sql
-
+SELECT r.nombre, COALESCE(SUM(ddc.cantidad), 0) AS cantidad_vendida
+FROM repuestos r
+  LEFT JOIN detalles_de_compras ddc ON r.id = ddc.repuesto_id
+GROUP BY r.nombre
+ORDER BY cantidad_vendida ASC;
 ```
 
 
@@ -627,7 +637,13 @@ mayor.
 El administrador selecciona la opción para consultar las ciudades con más ventas realizadas.
 
 ```sql
-
+SELECT c.nombre, 
+  COUNT(v.id) AS cantidad_ventas
+FROM ciudades c
+  JOIN clientes cl ON c.id = cl.ciudad_id
+  JOIN ventas v ON cl.id = v.cliente_id
+GROUP BY c.nombre
+ORDER BY cantidad_ventas DESC;
 ```
 
 
