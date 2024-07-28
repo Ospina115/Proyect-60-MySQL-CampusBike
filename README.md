@@ -810,7 +810,15 @@ El sistema llama a un procedimiento almacenado para actualizar el inventario de 
 bicicletas vendidas.
 
   ```sql
-  
+  DELIMITER //
+  CREATE PROCEDURE actualizar_inventario_bicicletas_vendidas()
+  BEGIN
+      UPDATE bicicletas b
+      JOIN detalles_de_ventas dv ON b.id = dv.bicicleta_id
+      SET b.stock = b.stock - dv.cantidad
+      WHERE dv.venta_id IN (SELECT id FROM ventas);
+  END//
+  DELIMITER ;
   ```
 
   
@@ -818,7 +826,7 @@ bicicletas vendidas.
 El procedimiento almacenado actualiza el stock de cada bicicleta.
 
 ```sql
-
+CALL actualizar_inventario_bicicletas_vendidas();
 ```
 
 
