@@ -849,8 +849,6 @@ bicicletas vendidas.
       WHERE id = id_bici;
   END //
   DELIMITER ;
-  
-  CALL actualizar_inventario_bicicletas_vendidas(1,2);
   ```
 
   
@@ -869,32 +867,29 @@ El vendedor registra una nueva venta.
 
 ```sql
 DELIMITER //
-CREATE TRIGGER agregar_ventas
-BEFORE INSERT ON ventas 
-FOR EACH ROW
-BEGIN 
-	INSERT INTO ventas (fecha, cliente_id)
-	VALUES (NEW.fecha, NEW.cliente_id);
-END
-//
-DELIMITER ;
+CREATE PROCEDURE registrar_venta(
+    IN cliente_id INT,
+    IN fecha DATE,
+    IN bicicleta_id INT,
+    IN cantidad INT,
+    IN precio_unitario DECIMAL(10,2)
+)
+BEGIN
+    DECLARE venta_id INT;
 
+    INSERT INTO ventas (fecha, cliente_id)
+    VALUES (fecha, cliente_id);
 
-DELIMITER //
-CREATE TRIGGER verificacion_ventas
-BEFORE INSERT ON ventas
-FOR EACH ROW
-BEGIN 
-    IF NEW.fecha IS NULL 
-    OR NEW.cliente_id IS NULL 
-    THEN 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
-    END IF;
+    SET venta_id = LAST_INSERT_ID();
+
+    INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
+    VALUES (venta_id, bicicleta_id, cantidad, precio_unitario);
+
+    UPDATE bicicletas
+    SET stock = stock - cantidad
+    WHERE id = bicicleta_id;
 END //
 DELIMITER ;
-
-INSERT INTO ventas (fecha, cliente_id)
-VALUES ('2024-07-26', 1); 
 ```
 
 
@@ -902,65 +897,7 @@ VALUES ('2024-07-26', 1);
 El sistema llama a un procedimiento almacenado para registrar la venta y sus detalles.
 
 ```sql
-INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad) VALUES
-(5, 5, 3, 4000000.50);
-
-INSERT INTO ventas (fecha, cliente_id)values
-('2005-08-31', 1);
-
-//--------- TRIGGER YA EXISTENTES ---------------
-
-DELIMITER //
-CREATE TRIGGER agregar_ventas
-BEFORE INSERT ON ventas 
-FOR EACH ROW
-BEGIN 
-	INSERT INTO ventas (fecha, cliente_id)
-	VALUES (NEW.fecha, NEW.cliente_id);
-END
-//
-DELIMITER ;
-
-
-DELIMITER //
-CREATE TRIGGER verificacion_ventas
-BEFORE INSERT ON ventas
-FOR EACH ROW
-BEGIN 
-    IF NEW.fecha IS NULL 
-    OR NEW.cliente_id IS NULL 
-    THEN 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
-    END IF;
-END //
-DELIMITER ;
-
-DELIMITER //
-CREATE TRIGGER agregar_detalles_de_ventas
-BEFORE INSERT ON detalles_de_ventas 
-FOR EACH ROW
-BEGIN 
-	INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
-	VALUES (NEW.venta_id, NEW.bicicleta_id,NEW.cantidad,NEW.precio_unitario);
-END
-//
-DELIMITER ;
-
-
-DELIMITER //
-CREATE TRIGGER verificacion_detalles_de_ventas
-BEFORE INSERT ON detalles_de_ventas
-FOR EACH ROW
-BEGIN 
-    IF NEW.venta_id IS NULL 
-    OR NEW.bicicleta_id IS NULL 
-    OR NEW.cantidad IS NULL 
-    OR NEW.precio_unitario IS NULL 
-    THEN 
-        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Los campos deben llenarse';
-    END IF;
-END //
-DELIMITER ;
+CALL registrar_venta(1, '2023-03-01', 1, 2, 100.00);
 ```
 
 
@@ -991,7 +928,6 @@ END //
 DELIMITER ;
 
 CALL generarreporte();   
-
 
 +----+------------+------------+
 | id | fecha      | cliente_id |
@@ -1101,7 +1037,20 @@ y actualiza el stock de repuestos.
 El administrador solicita un reporte de inventario.
 
 ```sql
+DELIMITER //
+CREATE PROCEDURE generar_reporte_inventario()
+BEGIN
+    SELECT 'Bicicleta' AS tipo, b.id AS id_producto, m.nombre AS modelo, ma.nombre AS marca, b.precio, b.stock
+    FROM bicicletas b
+    INNER JOIN modelo m ON b.modelo = m.id
+    INNER JOIN marca ma ON b.marca = ma.id
 
+    UNION ALL
+
+    SELECT 'Repuesto' AS tipo, r.id AS id_producto, r.nombre AS modelo, r.descripcion AS marca, r.precio, r.stock
+    FROM repuestos r;
+END //
+DELIMITER ;
 ```
 
 
@@ -1109,7 +1058,7 @@ El administrador solicita un reporte de inventario.
 El sistema llama a un procedimiento almacenado para generar el reporte.
 
 ```sql
-
+CALL generar_reporte_inventario();
 ```
 
 
@@ -1124,26 +1073,21 @@ El procedimiento almacenado obtiene la información del inventario de bicicletas
 
 ### Caso de Uso 6: Actualización Masiva de Precios
 
-El administrador selecciona la opción para actualizar los precios de una marca específica.
-
-```sql
-
-```
-
-
-
-El administrador ingresa la marca y el porcentaje de incremento.
-
-```sql
-
-```
-
-
-
 El sistema llama a un procedimiento almacenado para actualizar los precios.
 
 ```sql
+DELIMITER //
+CREATE PROCEDURE actualizar_precios_marca(IN marca_id INT, IN porcentaje DECIMAL(10,2))
+BEGIN
+    UPDATE bicicletas
+    SET precio = precio * (1 + porcentaje / 100)
+    WHERE marca = marca_id;
 
+    UPDATE repuestos
+    SET precio = precio * (1 + porcentaje / 100)
+    WHERE marca = marca_id;
+END //
+DELIMITER ;
 ```
 
 
@@ -1152,7 +1096,7 @@ El procedimiento almacenado actualiza los precios de todas las bicicletas de la 
 especificada.
 
   ```sql
-  
+  CALL actualizar_precios_marca(1, 10.00);
   ```
 
   
@@ -1162,7 +1106,16 @@ especificada.
 El administrador selecciona la opción para generar un reporte de clientes por ciudad.
 
 ```sql
-
+DELIMITER //
+CREATE PROCEDURE reporte_clientes_ciudad()
+BEGIN
+    SELECT c.nombre AS ciudad, COUNT(cl.id) AS cantidad_clientes
+    FROM ciudades c
+    INNER JOIN clientes cl ON c.id = cl.ciudad_id
+    GROUP BY c.nombre
+    ORDER BY cantidad_clientes DESC;
+END //
+DELIMITER ;
 ```
 
 
@@ -1170,7 +1123,7 @@ El administrador selecciona la opción para generar un reporte de clientes por c
 El sistema llama a un procedimiento almacenado para generar el reporte.
 
 ```sql
-
+CALL reporte_clientes_ciudad();
 ```
 
 
@@ -1188,7 +1141,25 @@ El procedimiento almacenado obtiene la información de los clientes agrupados po
 El vendedor selecciona una bicicleta para vender.
 
 ```sql
+DELIMITER //
+CREATE PROCEDURE verificar_stock_bicicletas(IN id_bicicleta INT, IN cantidad INT)
+BEGIN
+    DECLARE stock_actual INT;
+    DECLARE mensaje VARCHAR(100);
 
+    SELECT stock INTO stock_actual
+    FROM bicicletas
+    WHERE id = id_bicicleta;
+
+    IF stock_actual >= cantidad THEN
+        SET mensaje = 'Hay suficiente stock para la venta.';
+    ELSE
+        SET mensaje = 'No hay suficiente stock para la venta.';
+    END IF;
+
+    SELECT mensaje AS resultado;
+END //
+DELIMITER ;
 ```
 
 
@@ -1196,7 +1167,7 @@ El vendedor selecciona una bicicleta para vender.
 El sistema llama a un procedimiento almacenado para verificar el stock.
 
 ```sql
-
+CALL verificar_stock_bicicletas(1, 2);
 ```
 
 
@@ -1215,7 +1186,45 @@ realizar la venta.
 El vendedor registra una devolución de bicicleta.
 
 ```sql
+DELIMITER //
+CREATE PROCEDURE registrar_devolucion_bicicleta(IN id_venta INT, IN id_bicicleta INT, IN cantidad INT)
+BEGIN
+    DECLARE stock_actual INT;
+    DECLARE mensaje VARCHAR(100);
 
+    -- miramos si la venta se hizo antes
+    IF NOT EXISTS (SELECT 1 FROM ventas WHERE id = id_venta) THEN
+        SET mensaje = 'La venta no existe.';
+        SELECT mensaje AS resultado;
+        RETURN;
+    END IF;
+
+    -- miramos si la bicicleta existe
+    IF NOT EXISTS (SELECT 1 FROM bicicletas WHERE id = id_bicicleta) THEN
+        SET mensaje = 'La bicicleta no existe.';
+        SELECT mensaje AS resultado;
+        RETURN;
+    END IF;
+
+    -- miramos si lo que se devuelve es mas de lo que se vendio
+    IF cantidad > (SELECT cantidad FROM detalles_de_ventas WHERE venta_id = id_venta AND bicicleta_id = id_bicicleta) THEN
+        SET mensaje = 'La cantidad a devolver es mayor que la cantidad vendida.';
+        SELECT mensaje AS resultado;
+        RETURN;
+    END IF;
+
+    -- actualizar stock
+    SELECT stock INTO stock_actual FROM bicicletas WHERE id = id_bicicleta;
+    UPDATE bicicletas SET stock = stock_actual + cantidad WHERE id = id_bicicleta;
+
+    -- registrar devolucion
+    INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
+    VALUES (id_venta, id_bicicleta, -cantidad, (SELECT precio_unitario FROM detalles_de_ventas WHERE venta_id = id_venta AND bicicleta_id = id_bicicleta));
+
+    SET mensaje = 'La devolución ha sido registrada con éxito.';
+    SELECT mensaje AS resultado;
+END //
+DELIMITER ;
 ```
 
 
@@ -1223,7 +1232,7 @@ El vendedor registra una devolución de bicicleta.
 El sistema llama a un procedimiento almacenado para registrar la devolución.
 
 ```sql
-
+CALL registrar_devolucion_bicicleta(1, 1, 1);
 ```
 
 
@@ -1241,7 +1250,23 @@ El procedimiento almacenado inserta la devolución y actualiza el stock de la bi
 El administrador selecciona un proveedor para generar un reporte de compras.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE reporte_compras_proveedor(IN fecha_inicio DATE, IN fecha_fin DATE)
+BEGIN
+    SELECT 
+        p.nombre AS proveedor,
+        SUM(dc.cantidad * dc.precio_unitario) AS total_compras,
+        COUNT(c.id) AS cantidad_compras
+    FROM compras c
+    INNER JOIN detalles_de_compras dc ON c.id = dc.compra_id
+    INNER JOIN repuestos r ON dc.repuesto_id = r.id
+    INNER JOIN proveedores p ON r.proveedor_id = p.id
+    WHERE c.fecha BETWEEN fecha_inicio AND fecha_fin
+    GROUP BY p.nombre
+    ORDER BY total_compras DESC;
+END //
+DELIMITER ;
 ```
 
 
@@ -1249,7 +1274,7 @@ El administrador selecciona un proveedor para generar un reporte de compras.
 El sistema llama a un procedimiento almacenado para generar el reporte.
 
 ```sql
-
+CALL reporte_compras_proveedor('2022-01-01', '2022-12-31');
 ```
 
 
@@ -1268,7 +1293,30 @@ proveedor.
 El vendedor aplica un descuento a una venta.
 
 ```sql
+DELIMITER //
 
+CREATE PROCEDURE calcular_descuento(IN cliente_id INT, IN bicicleta_id INT, IN cantidad INT, IN fecha DATE)
+BEGIN
+    DECLARE precio_unitario DECIMAL(10,2);
+    DECLARE total DECIMAL(10,2);
+    DECLARE descuento DECIMAL(10,2);
+    DECLARE total_con_descuento DECIMAL(10,2);
+
+    SELECT precio INTO precio_unitario FROM bicicletas WHERE id = bicicleta_id;
+    SET total = precio_unitario * cantidad;
+    SET descuento = total * 0.10; -- calcular el descuento
+    SET total_con_descuento = total - descuento; -- total con descuento
+    
+    INSERT INTO ventas (fecha, cliente_id) VALUES (fecha, cliente_id);
+    SET @venta_id = LAST_INSERT_ID(); -- tener el id de la venta creada
+
+    INSERT INTO detalles_de_ventas (venta_id, bicicleta_id, cantidad, precio_unitario)
+    VALUES (@venta_id, bicicleta_id, cantidad, precio_unitario);
+
+    UPDATE bicicletas SET stock = stock - cantidad WHERE id = bicicleta_id;
+    SELECT total_con_descuento AS resultado; -- mostrar el total con el descuento
+END //
+DELIMITER ;
 ```
 
 
@@ -1276,7 +1324,7 @@ El vendedor aplica un descuento a una venta.
 El sistema llama a un procedimiento almacenado para calcular el total con descuento.
 
 ```sql
-
+CALL calcular_descuento(1, 1, 2, '2022-01-01');
 ```
 
 
@@ -2040,7 +2088,7 @@ SELECT
     GROUP BY 
         dia_semana
     ORDER BY 
-        FIELD(dia_semana, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+        FIELD(dia_semana, 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
 ```
 
 
@@ -2073,7 +2121,7 @@ BEGIN
     GROUP BY 
         dia_semana
     ORDER BY 
-        FIELD(dia_semana, 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday');
+        FIELD(dia_semana, 'Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes', 'Sabado', 'Domingo');
 END //
 
 DELIMITER ;
